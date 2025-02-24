@@ -5,6 +5,9 @@
 			"referenceName": "LS_Library_data",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "HTTP_library_sources"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
