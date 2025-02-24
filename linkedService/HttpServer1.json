@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "https://skillio365-my.sharepoint.com/:x:/g/personal/miska_savenius_skillio_ai/EeESvggXBkZPng6sKYuGMuQByeKGeLXWmOLYYNIgAfAizw?e=glAOtj",
+			"url": "https://skillio365-my.sharepoint.com/:x:/g/personal/miska_savenius_skillio_ai/EYrqxRCgqCROhLdesTVGfQgBwJAY55fqIfGz7bhUT1Xf7w?e=QvjStt",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		},
