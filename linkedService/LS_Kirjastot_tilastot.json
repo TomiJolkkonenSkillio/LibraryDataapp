@@ -1,0 +1,16 @@
+{
+	"name": "LS_Kirjastot_tilastot",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://www.kirjastot.fi/sites/default/files/content/yleistenkirjastojen_tilastot2023_0.xls",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
