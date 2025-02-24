@@ -35,7 +35,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_Src_HTTP_Libary_2023",
+						"referenceName": "DS_Src_HTTP_Library_2023",
 						"type": "DatasetReference"
 					}
 				],
