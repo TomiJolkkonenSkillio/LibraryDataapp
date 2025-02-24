@@ -4,8 +4,8 @@
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "https://www.kirjastot.fi",
-			"enableServerCertificateValidation": true,
+			"url": "https://www.kirjastot.fi/",
+			"enableServerCertificateValidation": false,
 			"authenticationType": "Anonymous"
 		},
 		"connectVia": {
