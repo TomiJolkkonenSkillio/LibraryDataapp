@@ -1,0 +1,91 @@
+{
+	"name": "NotebookTomitest",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "group2sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "99da2901-ea0b-493e-8c74-25ffa2ecbc8b"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/23b183d5-a30f-46b8-b418-ad060fb67787/resourceGroups/Group2SynapseETLProject/providers/Microsoft.Synapse/workspaces/group2-synapse-etl-workspace/bigDataPools/group2sparkpool",
+				"name": "group2sparkpool",
+				"type": "Spark",
+				"endpoint": "https://group2-synapse-etl-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/group2sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Spark Code, libraries 2015"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import SparkSession\n",
+					"\n",
+					"# Create Spark session\n",
+					"spark = SparkSession.builder.appName(\"ExcelToCSV\").getOrCreate()\n",
+					"\n",
+					"# Path to Excel file in ADLS\n",
+					"excel_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2015.xls\"\n",
+					"\n",
+					"# Read Excel file using Spark-Excel\n",
+					"df = spark.read.format(\"com.crealytics.spark.excel\") \\\n",
+					"    .option(\"header\", \"true\").option(\"inferSchema\", \"true\").option(\"dataAddress\", \"'All'!A1\").load(excel_path)  # Load the Excel file\n",
+					"\n",
+					"# Show DataFrame schema and preview data\n",
+					"df.printSchema()\n",
+					"df.show(5)\n",
+					"\n",
+					"# Save as CSV in ADLS\n",
+					"csv_output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2015.csv\"\n",
+					"df.write.mode(\"overwrite\").option(\"header\", \"true\").csv(csv_output_path)"
+				],
+				"execution_count": 8
+			}
+		]
+	}
+}
