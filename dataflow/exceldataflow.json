@@ -1,0 +1,177 @@
+{
+	"name": "exceldataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Excellibrary2014",
+						"type": "DatasetReference"
+					},
+					"name": "data2014"
+				},
+				{
+					"name": "source2"
+				},
+				{
+					"name": "source3"
+				},
+				{
+					"name": "source4"
+				},
+				{
+					"name": "source5"
+				},
+				{
+					"name": "source6"
+				},
+				{
+					"name": "source7"
+				},
+				{
+					"name": "source8"
+				},
+				{
+					"name": "source9"
+				},
+				{
+					"name": "source10"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "RemoveDuplicateColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Kokoelmat0 as string,",
+				"          Kokoelmat1 as integer,",
+				"          {Kokoelmat: Kirjat yhteensä} as integer,",
+				"          {Kokoelmat: Suomenkieliset kirjat} as integer,",
+				"          {Kokoelmat: Ruotsinkieliset kirjat} as integer,",
+				"          {Kokoelmat: Muunkieliset kirjat} as integer,",
+				"          {Kokoelmat: Kaunokirjat, aikuiset} as integer,",
+				"          {Kokoelmat: Kaunokirjat, lapset} as integer,",
+				"          {Kokoelmat: Tietokirjat, aikuiset} as integer,",
+				"          {Kokoelmat: Tietokirjat, lapset} as integer,",
+				"          {Kokoelmat: Nuotit ja partituurit} as integer,",
+				"          {Kokoelmat: Musiikkiäänitteet} as integer,",
+				"          {Kokoelmat: Muut äänitteet} as integer,",
+				"          {Kokoelmat: Videotallenteet (2018-)} as string,",
+				"          {Kokoelmat: Muut aineistot} as short,",
+				"          {Kokoelmat: Videot (-2017)} as short,",
+				"          {Kokoelmat: CD-Rom-levyt (-2017)} as short,",
+				"          {Kokoelmat: DVD ja Blue-ray -levyt (-2017)} as integer,",
+				"          Lainaus as string,",
+				"          Kokonaislainaus as integer,",
+				"          {Lainaus yhteensä} as integer,",
+				"          {Lainaus: Kirjat yhteensä} as integer,",
+				"          {Lainaus: Suomenkieliset kirjat} as integer,",
+				"          {Lainaus: Ruotsinkieliset kirjat} as integer,",
+				"          {Lainaus: Muunkieliset kirjat} as integer,",
+				"          {Lainaus: Kaunokirjat, aikuiset} as integer,",
+				"          {Lainaus: Kaunokirjat, lapset} as integer,",
+				"          {Lainaus: Tietokirjat, aikuiset} as integer,",
+				"          {Lainaus: Tietokirjat, lapset} as integer,",
+				"          {Lainaus: Nuotit ja partituurit} as integer,",
+				"          {Lainaus: Musiikkiäänitteet} as integer,",
+				"          {Lainaus: Muut äänitteet} as integer,",
+				"          {Lähetetyt kaukolainat (2022-)} as string,",
+				"          {Lainaus: Celian äänikirjat CD-levyina} as string,",
+				"          {Lainaus: Videotallenteet (2018-)} as string,",
+				"          {Lainaus: Muut aineistot} as integer,",
+				"          {Lähetetyt kaukolainat (-2021)} as short,",
+				"          {Saadut kaukolainat (-2021)} as short,",
+				"          {Lainaus: Videot (-2017)} as short,",
+				"          {Lainat: CD-rom-levyt (-2017)} as short,",
+				"          {Lainaus: DVD ja Blu-ray-levyt (-2017)} as integer,",
+				"          Talous as string,",
+				"          {Toimintakulut tilastovuonna} as double,",
+				"          {Henkilöstökulut} as double,",
+				"          Kirjastoaineistokulut as double,",
+				"          {Kirjojen hankintakulut} as double,",
+				"          {E-aineistokulut} as double,",
+				"          Tilakustannukset as double,",
+				"          {Muut kulut} as double,",
+				"          {Toimintakulut kuluvan vuoden talousarviossa} as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> data2014",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source3",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source4",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source5",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source6",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source7",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source8",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source9",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source10",
+				"data2014 select(mapColumn(",
+				"          Kokoelmat0,",
+				"          Kokoelmat1,",
+				"          {Kokoelmat: Kirjat yhteensä},",
+				"          {Kokoelmat: Suomenkieliset kirjat},",
+				"          {Kokoelmat: Ruotsinkieliset kirjat},",
+				"          {Kokoelmat: Muunkieliset kirjat},",
+				"          {Kokoelmat: Kaunokirjat, aikuiset},",
+				"          {Kokoelmat: Kaunokirjat, lapset},",
+				"          {Kokoelmat: Tietokirjat, aikuiset},",
+				"          {Kokoelmat: Tietokirjat, lapset},",
+				"          {Kokoelmat: Nuotit ja partituurit},",
+				"          {Kokoelmat: Musiikkiäänitteet},",
+				"          {Kokoelmat: Muut äänitteet},",
+				"          {Kokoelmat: Videotallenteet (2018-)},",
+				"          {Kokoelmat: Muut aineistot},",
+				"          {Kokoelmat: Videot (-2017)},",
+				"          {Kokoelmat: CD-Rom-levyt (-2017)},",
+				"          {Kokoelmat: DVD ja Blue-ray -levyt (-2017)},",
+				"          Kokonaislainaus,",
+				"          {Lainaus yhteensä},",
+				"          {Lainaus: Kirjat yhteensä},",
+				"          {Lainaus: Suomenkieliset kirjat},",
+				"          {Lainaus: Ruotsinkieliset kirjat},",
+				"          {Lainaus: Muunkieliset kirjat},",
+				"          {Lainaus: Kaunokirjat, aikuiset},",
+				"          {Lainaus: Kaunokirjat, lapset},",
+				"          {Lainaus: Tietokirjat, aikuiset},",
+				"          {Lainaus: Tietokirjat, lapset},",
+				"          {Lainaus: Nuotit ja partituurit},",
+				"          {Lainaus: Musiikkiäänitteet},",
+				"          {Lainaus: Muut äänitteet},",
+				"          {Lähetetyt kaukolainat (2022-)},",
+				"          {Lainaus: Celian äänikirjat CD-levyina},",
+				"          {Lainaus: Videotallenteet (2018-)},",
+				"          {Lainaus: Muut aineistot},",
+				"          {Lähetetyt kaukolainat (-2021)},",
+				"          {Saadut kaukolainat (-2021)},",
+				"          {Lainaus: Videot (-2017)},",
+				"          {Lainat: CD-rom-levyt (-2017)},",
+				"          {Lainaus: DVD ja Blu-ray-levyt (-2017)},",
+				"          {Toimintakulut tilastovuonna},",
+				"          {Henkilöstökulut},",
+				"          Kirjastoaineistokulut,",
+				"          {Kirjojen hankintakulut},",
+				"          {E-aineistokulut},",
+				"          Tilakustannukset,",
+				"          {Muut kulut},",
+				"          {Toimintakulut kuluvan vuoden talousarviossa}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RemoveDuplicateColumns"
+			]
+		}
+	}
+}
