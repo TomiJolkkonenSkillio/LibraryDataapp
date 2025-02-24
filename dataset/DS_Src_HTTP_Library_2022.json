@@ -1,5 +1,5 @@
 {
-	"name": "DS_Src_HTTP_Libary_2022",
+	"name": "DS_Src_HTTP_Library_2022",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_Library_data",
