@@ -1,0 +1,19 @@
+{
+	"name": "DS_Snk_ADSL_Library2021",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "library2021.xls",
+				"folderPath": "raw",
+				"fileSystem": "library"
+			}
+		}
+	}
+}
