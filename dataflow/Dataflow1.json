@@ -1,0 +1,35 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_vaesto_json",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          bbox as double[],",
+				"          crs as (properties as (name as string), type as string),",
+				"          features as (bbox as double[], geometry as (coordinates as string[][][], type as string), geometry_name as string, id as string, properties as (ika_0_14 as integer, ika_0_14p as double, ika_15_64 as integer, ika_15_64p as double, ika_65_ as integer, ika_65_p as double, kunta as short, miehet as integer, miehet_p as double, naiset as integer, naiset_p as double, name as string, namn as string, nimi as string, til_vuosi as short, vaesto as integer, vaesto_p as double, vuosi as short), type as string)[],",
+				"          numberMatched as short,",
+				"          numberReturned as short,",
+				"          timeStamp as string,",
+				"          totalFeatures as short,",
+				"          type as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> source1"
+			]
+		}
+	}
+}
