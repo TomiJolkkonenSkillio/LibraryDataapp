@@ -1,5 +1,5 @@
 {
-	"name": "exceldataflow",
+	"name": "librarydatatransformsilver",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
