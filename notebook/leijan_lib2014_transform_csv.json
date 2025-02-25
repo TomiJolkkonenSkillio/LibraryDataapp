@@ -1,5 +1,5 @@
 {
-	"name": "leijan_kokeilut",
+	"name": "leijan_lib2014_transform_csv",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "db0b8949-6c74-439e-8b7b-c2aba39e4c09"
+				"spark.autotune.trackingId": "f8118622-3126-47d5-bdab-28062382fbe3"
 			}
 		},
 		"metadata": {
@@ -50,61 +50,58 @@
 		"cells": [
 			{
 				"cell_type": "code",
-				"source": [
-					"import pandas\n",
-					"import xlrd\n",
-					"workbook = xlrd.open_workbook_xls(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\", ignore_workbook_corruption=True)\n",
-					"df = pandas.read_excel(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\", sheet_name='ALL', ignore_workbook_corruption=True)\n",
-					"sdf = spark.createDataFrame(df, inferSchema=True)"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
 					"from pyspark.sql import SparkSession\n",
 					"\n",
 					"spark = SparkSession.builder.appName(\"ReadExcel\").config(\"spark.jars.packages\", \"com.crealytics:spark-excel_2.12:0.13.3\").getOrCreate()\n",
 					"\n",
-					"df = spark.read \\\n",
-					"    .format(\"com.crealytics.spark.excel\") \\\n",
-					"    .option(\"sheetName\", \"all\") \\\n",
-					"    .option(\"useHeader\", \"true\") \\\n",
-					"    .option(\"inferSchema\", \"true\") \\\n",
-					"    .load(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\")\n",
+					"df = spark.read.format(\"com.crealytics.spark.excel\").option(\"header\", \"true\").option(\"inferSchema\", \"true\").option(\"dataAddress\", \"'All'!A1\").load(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\")\n",
 					"\n",
-					"df.show()"
+					"display(df)"
 				],
 				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"   import openpyxl\n",
-					"   import pandas as pd\n",
-					"   from pyspark.sql import SparkSession\n",
-					"\n",
-					"   # Create SparkSession\n",
-					"   spark = SparkSession.builder.appName(\"OpenpyxlWithSpark\").getOrCreate()\n",
-					"\n",
-					"   # 1. Pre-processing: Convert to CSV first\n",
-					"   wb = openpyxl.load_workbook(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\")  # Path accessible to the driver\n",
-					"   ws = wb.active\n",
-					"   data = ws.values\n",
-					"   columns = next(data)[0:]\n",
-					"   df_pandas = pd.DataFrame(data, columns=columns)\n",
-					"   df_pandas.to_csv(\"temp.csv\", index=False) # Save as CSV\n",
-					"\n",
-					"   # Now read the CSV into Spark\n",
-					"   df_spark = spark.read.csv(\"temp.csv\", header=True, inferSchema=True)\n",
-					"   df_spark.show()\n",
-					"\n",
-					"   # OR 2. Post-processing: Collect Spark DataFrame to driver\n",
-					"   # ... some Spark operations ...\n",
-					"   pandas_df = df_spark.toPandas() # Collect to the driver\n",
-					"   # ... Now use openpyxl on pandas_df ..."
+					"# Print the list of columns in separate lines\n",
+					"print(\"Columns in DataFrame:\")\n",
+					"for col in df.columns:\n",
+					"    print(col)"
 				],
 				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"import re\n",
+					"\n",
+					"# Function to rename columns: remove numbers, parentheses, hyphens, and make lowercase\n",
+					"new_columns = [re.sub(r'[^\\w\\s]', '', col)  # Remove special characters like (), -, etc.\n",
+					"               .replace(\" \", \"_\")  # Replace spaces with underscores\n",
+					"               .lower()  # Convert to lowercase\n",
+					"               .replace(r'\\d+', '')  # Remove digits\n",
+					"               for col in df.columns]\n",
+					"\n",
+					"# Apply new column names\n",
+					"for old_name, new_name in zip(df.columns, new_columns):\n",
+					"    df = df.withColumnRenamed(old_name, new_name)\n",
+					"\n",
+					"# Show the DataFrame with the updated column names\n",
+					"display(df)\n",
+					"\n",
+					"# Print the updated column names in separate lines\n",
+					"print(\"Updated Columns in DataFrame:\")\n",
+					"for col in df.columns:\n",
+					"    print(col)"
+				],
+				"execution_count": 19
 			}
 		]
 	}
