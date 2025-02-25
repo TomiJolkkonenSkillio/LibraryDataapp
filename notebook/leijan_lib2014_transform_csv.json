@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d2f64bfd-42c0-45a9-9967-5eadff449ffb"
+				"spark.autotune.trackingId": "b538ddae-e949-490e-9cac-98c5e33aa761"
 			}
 		},
 		"metadata": {
@@ -228,6 +228,22 @@
 					"df.printSchema()"
 				],
 				"execution_count": 77
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import SparkSession\n",
+					"\n",
+					"\n",
+					"# Define output path\n",
+					"output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library/silver/notebook_files/library_data.parquet\"\n",
+					"\n",
+					"# Save DataFrame as Parquet\n",
+					"df_combined.write.mode(\"overwrite\").parquet(output_path)\n",
+					"\n",
+					"print(\"Data successfully saved to ADLS in Parquet format.\")"
+				],
+				"execution_count": null
 			}
 		]
 	}
