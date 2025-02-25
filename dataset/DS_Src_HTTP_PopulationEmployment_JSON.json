@@ -1,0 +1,17 @@
+{
+	"name": "DS_Src_HTTP_PopulationEmployment_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_PopulationEmployment",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": {}
+	}
+}

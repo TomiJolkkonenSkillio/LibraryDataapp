@@ -1,0 +1,16 @@
+{
+	"name": "DS_Src_HTTP_PopulationEmployment_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_PopulationEmployment",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}
