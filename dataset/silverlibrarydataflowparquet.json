@@ -13,8 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "librarydataflow.parquet",
-				"folderPath": "silver",
+				"folderPath": "silver/librarydata",
 				"fileSystem": "library"
 			},
 			"compressionCodec": null
