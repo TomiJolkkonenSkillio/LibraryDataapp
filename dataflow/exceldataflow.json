@@ -12,10 +12,18 @@
 					"name": "data2014"
 				},
 				{
-					"name": "source2"
+					"dataset": {
+						"referenceName": "excellibrary2015",
+						"type": "DatasetReference"
+					},
+					"name": "data2015"
 				},
 				{
-					"name": "source3"
+					"dataset": {
+						"referenceName": "excellibrary2016",
+						"type": "DatasetReference"
+					},
+					"name": "data2016"
 				},
 				{
 					"name": "source4"
@@ -102,9 +110,11 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> data2014",
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source2",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> data2015",
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source3",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> data2016",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false) ~> source4",
 				"source(allowSchemaDrift: true,",
