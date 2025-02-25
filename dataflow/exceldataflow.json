@@ -81,7 +81,7 @@
 					"name": "unionalldata"
 				},
 				{
-					"name": "select1"
+					"name": "removeduplicatecolumnsandrenamecolumns"
 				}
 			],
 			"scriptLines": [
@@ -687,7 +687,7 @@
 				"          toimintakulut_kuluvan_vuoden_talousarviossa = {Toimintakulut kuluvan vuoden talousarviossa}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> removeduplicatecolumnsandrenamecolumns"
 			]
 		}
 	}
