@@ -17,7 +17,8 @@
 				"folderPath": "raw",
 				"fileSystem": "library"
 			},
-			"sheetIndex": 0
+			"sheetIndex": 0,
+			"firstRowAsHeader": true
 		},
 		"schema": []
 	}
