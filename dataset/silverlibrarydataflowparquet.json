@@ -1,0 +1,24 @@
+{
+	"name": "silverlibrarydataflowparquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "librarydataflow.parquet",
+				"folderPath": "silver",
+				"fileSystem": "library"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
