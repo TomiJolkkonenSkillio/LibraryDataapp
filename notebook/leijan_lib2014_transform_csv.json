@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f8118622-3126-47d5-bdab-28062382fbe3"
+				"spark.autotune.trackingId": "8d17d0e0-ca4f-46a5-86a8-c83a9dd789c2"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": null
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -72,7 +72,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": null
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -101,7 +101,45 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 19
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql.functions import split\n",
+					"\n",
+					"# Split the 'kokoelmat0' column into two parts based on the comma\n",
+					"df = df.withColumn(\"kunta\", split(df[\"kokoelmat0\"], \",\").getItem(0)) \\\n",
+					"       .withColumn(\"year\", split(df[\"kokoelmat0\"], \",\").getItem(1))\n",
+					"\n",
+					"# Drop the original 'kokoelmat0' column\n",
+					"df = df.drop(\"kokoelmat0\")\n",
+					"\n",
+					"# Reorder columns to have 'kunta' and 'year' as the first columns\n",
+					"new_order = [\"kunta\", \"year\"] + [col for col in df.columns if col not in [\"kunta\", \"year\"]]\n",
+					"df = df.select(new_order)\n",
+					"\n",
+					"# Show the updated DataFrame\n",
+					"display(df)\n",
+					"\n",
+					"# Print the updated column names to verify the order\n",
+					"print(\"Updated Columns in DataFrame:\")\n",
+					"for col in df.columns:\n",
+					"    print(col)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Check the types of the columns\n",
+					"for column, dtype in df.dtypes:\n",
+					"    print(f\"Column: {column}, Type: {dtype}\")"
+				],
+				"execution_count": 27
 			}
 		]
 	}
