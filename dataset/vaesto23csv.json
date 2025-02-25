@@ -5,6 +5,9 @@
 			"referenceName": "vaestohttpcsv",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "HTTP_vaesto_sources"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

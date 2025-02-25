@@ -5,6 +5,9 @@
 			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "ADLS_vaesto_sinks"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
