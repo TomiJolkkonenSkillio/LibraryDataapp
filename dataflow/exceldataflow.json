@@ -75,7 +75,15 @@
 					"name": "data2023"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silverlibrarydataflowparquet",
+						"type": "DatasetReference"
+					},
+					"name": "sinktodatalake"
+				}
+			],
 			"transformations": [
 				{
 					"name": "unionalldata"
@@ -749,7 +757,15 @@
 				"          toimintakulut_kuluvan_vuoden_talousarviossa",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> removekuntavuosi"
+				"     skipDuplicateMapOutputs: true) ~> removekuntavuosi",
+				"removekuntavuosi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinktodatalake"
 			]
 		}
 	}
