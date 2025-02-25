@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ebd397bb-a0de-4076-b84c-598df16fd781"
+				"spark.autotune.trackingId": "c94e4d05-fa4b-48c8-922c-49ad7259d5d7"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 					"# Display the final combined DataFrame\n",
 					"display(df_combined)"
 				],
-				"execution_count": 2
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -114,7 +114,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 4
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -143,7 +143,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 5
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -162,7 +162,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 6
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -180,7 +180,7 @@
 					"# Show the updated schema\n",
 					"df.printSchema()"
 				],
-				"execution_count": 7
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 8
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -220,14 +220,14 @@
 					"\n",
 					"\n",
 					"# Define output path\n",
-					"output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/library/silver/notebook_files/library_data.parquet\"\n",
+					"output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/notebook_files/library_data.parquet\"\n",
 					"\n",
 					"# Save DataFrame as Parquet\n",
 					"df_combined.write.mode(\"overwrite\").parquet(output_path)\n",
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 9
+				"execution_count": 16
 			}
 		]
 	}
