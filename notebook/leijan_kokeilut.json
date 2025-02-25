@@ -1,0 +1,109 @@
+{
+	"name": "leijan_kokeilut",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "group2sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9f57fbed-ac85-4bc3-b77e-da269fec2ced"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/23b183d5-a30f-46b8-b418-ad060fb67787/resourceGroups/Group2SynapseETLProject/providers/Microsoft.Synapse/workspaces/group2-synapse-etl-workspace/bigDataPools/group2sparkpool",
+				"name": "group2sparkpool",
+				"type": "Spark",
+				"endpoint": "https://group2-synapse-etl-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/group2sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas\n",
+					"df = pandas.read_excel(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\", sheet_name='all')\n",
+					"sdf = spark.createDataFrame(df, inferSchema=True)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import SparkSession\n",
+					"\n",
+					"spark = SparkSession.builder.appName(\"ReadExcel\").config(\"spark.jars.packages\", \"com.crealytics:spark-excel_2.12:0.13.3\").getOrCreate()\n",
+					"\n",
+					"df = spark.read \\\n",
+					"    .format(\"com.crealytics.spark.excel\") \\\n",
+					"    .option(\"sheetName\", \"all\") \\\n",
+					"    .option(\"useHeader\", \"true\") \\\n",
+					"    .option(\"inferSchema\", \"true\") \\\n",
+					"    .load(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\")\n",
+					"\n",
+					"df.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"   import openpyxl\n",
+					"   import pandas as pd\n",
+					"   from pyspark.sql import SparkSession\n",
+					"\n",
+					"   # Create SparkSession\n",
+					"   spark = SparkSession.builder.appName(\"OpenpyxlWithSpark\").getOrCreate()\n",
+					"\n",
+					"   # 1. Pre-processing: Convert to CSV first\n",
+					"   wb = openpyxl.load_workbook(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\")  # Path accessible to the driver\n",
+					"   ws = wb.active\n",
+					"   data = ws.values\n",
+					"   columns = next(data)[0:]\n",
+					"   df_pandas = pd.DataFrame(data, columns=columns)\n",
+					"   df_pandas.to_csv(\"temp.csv\", index=False) # Save as CSV\n",
+					"\n",
+					"   # Now read the CSV into Spark\n",
+					"   df_spark = spark.read.csv(\"temp.csv\", header=True, inferSchema=True)\n",
+					"   df_spark.show()\n",
+					"\n",
+					"   # OR 2. Post-processing: Collect Spark DataFrame to driver\n",
+					"   # ... some Spark operations ...\n",
+					"   pandas_df = df_spark.toPandas() # Collect to the driver\n",
+					"   # ... Now use openpyxl on pandas_df ..."
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
