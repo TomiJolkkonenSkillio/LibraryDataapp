@@ -79,6 +79,9 @@
 			"transformations": [
 				{
 					"name": "union1"
+				},
+				{
+					"name": "sort1"
 				}
 			],
 			"scriptLines": [
@@ -632,7 +635,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> data2023",
-				"data2014, data2015, data2016, data2017, data2018, data2019, data2020, data2021, data2022, data2023 union(byName: true)~> union1"
+				"data2014, data2015, data2016, data2017, data2018, data2019, data2020, data2021, data2022, data2023 union(byName: true)~> union1",
+				"union1 sort(asc({Kokoelmat: Musiikkiäänitteet}, true)) ~> sort1"
 			]
 		}
 	}
