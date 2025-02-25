@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "de7c372d-4579-4d0e-9786-e79aaa0e1dcc"
+				"spark.autotune.trackingId": "891a6e5c-5715-4302-bc8a-6985b9d49acc"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 					"# Display the final combined DataFrame\n",
 					"display(df_combined)"
 				],
-				"execution_count": 78
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -101,7 +101,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 79
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -130,7 +130,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 80
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -159,7 +159,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 81
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -178,7 +178,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 82
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -196,7 +196,7 @@
 					"# Show the updated schema\n",
 					"df.printSchema()"
 				],
-				"execution_count": 83
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -227,7 +227,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 84
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -236,14 +236,14 @@
 					"\n",
 					"\n",
 					"# Define output path\n",
-					"output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library/silver/notebook_files/library_data.parquet\"\n",
+					"output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/library/silver/notebook_files/library_data.parquet\"\n",
 					"\n",
 					"# Save DataFrame as Parquet\n",
 					"df_combined.write.mode(\"overwrite\").parquet(output_path)\n",
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 85
+				"execution_count": null
 			}
 		]
 	}
