@@ -1,22 +1,24 @@
 {
-	"name": "DS_Snk_ADSL_Library2015",
+	"name": "silverlibrarydataflowparquet",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "ADLS_library_sinks"
+			"name": "silver"
 		},
 		"annotations": [],
-		"type": "Binary",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "library2015.xls",
-				"folderPath": "raw",
+				"fileName": "librarydataflow.parquet",
+				"folderPath": "silver",
 				"fileSystem": "library"
-			}
-		}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
 	}
 }
