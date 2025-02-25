@@ -1,0 +1,21 @@
+{
+	"name": "excellibrary2021",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "library2021.xls",
+				"folderPath": "raw",
+				"fileSystem": "library"
+			},
+			"sheetIndex": 0
+		},
+		"schema": []
+	}
+}
