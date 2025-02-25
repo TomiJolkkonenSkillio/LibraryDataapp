@@ -1,0 +1,20 @@
+{
+	"name": "DS_Snk_ADSL_PopulationEmployment_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Population_employment.json",
+				"folderPath": "raw",
+				"fileSystem": "vaesto"
+			}
+		},
+		"schema": {}
+	}
+}
