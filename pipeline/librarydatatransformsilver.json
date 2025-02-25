@@ -1,5 +1,5 @@
 {
-	"name": "datatransformexcel",
+	"name": "librarydatatransformsilver",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "exceldataflow",
+						"referenceName": "librarydatatransformsilver",
 						"type": "DataFlowReference"
 					},
 					"compute": {
