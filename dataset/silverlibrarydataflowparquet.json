@@ -17,7 +17,7 @@
 				"folderPath": "silver",
 				"fileSystem": "library"
 			},
-			"compressionCodec": "snappy"
+			"compressionCodec": null
 		},
 		"schema": []
 	}
