@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "094a2e0e-1855-4e4d-8c8a-ec7c7e82bf81"
+				"spark.autotune.trackingId": "d2f64bfd-42c0-45a9-9967-5eadff449ffb"
 			}
 		},
 		"metadata": {
@@ -56,23 +56,81 @@
 				"source": [
 					"from pyspark.sql import SparkSession\n",
 					"\n",
-					"spark = SparkSession.builder.appName(\"ReadExcel\").config(\"spark.jars.packages\", \"com.crealytics:spark-excel_2.12:0.13.3\").getOrCreate()\n",
+					"# Initialize Spark Session\n",
+					"spark = SparkSession.builder.appName(\"ReadExcel\") \\\n",
+					"    .config(\"spark.jars.packages\", \"com.crealytics:spark-excel_2.12:0.13.3\") \\\n",
+					"    .getOrCreate()\n",
 					"\n",
-					"df = spark.read.format(\"com.crealytics.spark.excel\").option(\"header\", \"true\").option(\"inferSchema\", \"true\").option(\"dataAddress\", \"'All'!A1\").load(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\")\n",
+					"# List of file paths\n",
+					"file_paths = [\n",
+					"    f\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library{year}.xls\"\n",
+					"    for year in range(2014, 2023)\n",
+					"]\n",
 					"\n",
-					"display(df)"
+					"# Read and merge all files\n",
+					"df_list = [\n",
+					"    spark.read.format(\"com.crealytics.spark.excel\")\n",
+					"    .option(\"header\", \"true\")\n",
+					"    .option(\"inferSchema\", \"true\")\n",
+					"    .option(\"dataAddress\", \"'All'!A1\")\n",
+					"    .load(file)\n",
+					"    for file in file_paths\n",
+					"]\n",
+					"\n",
+					"# Union all DataFrames into one\n",
+					"df_combined = df_list[0]  # Start with the first DataFrame\n",
+					"for df in df_list[1:]:\n",
+					"    df_combined = df_combined.unionByName(df, allowMissingColumns=True)  # Combine, allowing missing columns\n",
+					"\n",
+					"# Display the final combined DataFrame\n",
+					"display(df_combined)"
 				],
-				"execution_count": 11
+				"execution_count": 71
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
-					"# Print the list of columns in separate lines\n",
-					"print(\"Columns in DataFrame:\")\n",
+					"# Show the updated DataFrame\n",
+					"display(df)\n",
+					"\n",
+					"# Print the updated column names to verify\n",
+					"print(\"Updated Columns in DataFrame:\")\n",
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 6
+				"execution_count": 72
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql.functions import split\n",
+					"\n",
+					"# Split the 'kokoelmat0' column into two parts based on the comma\n",
+					"df = df.withColumn(\"kunta\", split(df[\"kokoelmat0\"], \",\").getItem(0)) \\\n",
+					"       .withColumn(\"vuosi\", split(df[\"kokoelmat0\"], \",\").getItem(1))\n",
+					"\n",
+					"# Drop the original 'kokoelmat0' column\n",
+					"df = df.drop(\"kokoelmat0\")\n",
+					"\n",
+					"# Reorder columns to have 'kunta' and 'kunta' as the first columns\n",
+					"new_order = [\"kunta\", \"vuosi\"] + [col for col in df.columns if col not in [\"kunta\", \"vuosi\"]]\n",
+					"df = df.select(new_order)\n",
+					"\n",
+					"# Show the updated DataFrame\n",
+					"display(df)\n",
+					"\n",
+					"# Print the updated column names to verify the order\n",
+					"print(\"Updated Columns in DataFrame:\")\n",
+					"for col in df.columns:\n",
+					"    print(col)"
+				],
+				"execution_count": 73
 			},
 			{
 				"cell_type": "code",
@@ -84,6 +142,7 @@
 					"\n",
 					"# Function to rename columns: remove numbers, parentheses, hyphens, and make lowercase\n",
 					"new_columns = [re.sub(r'[^\\w\\s]|\\d+', '', col) # Remove numbers and special characters like (), -, etc.\n",
+					"                .strip()\n",
 					"                .replace(\" \", \"_\") # Replace spaces with underscores\n",
 					"                .lower() # Convert to lowercase\n",
 					"            for col in df.columns]\n",
@@ -100,7 +159,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 14
+				"execution_count": 74
 			},
 			{
 				"cell_type": "code",
@@ -108,37 +167,67 @@
 					"collapsed": false
 				},
 				"source": [
-					"from pyspark.sql.functions import split\n",
+					"# Drop the columns 'talous' and 'lainaus'\n",
+					"df = df.drop(\"talous\", \"lainaus\", \"lähetetyt_kaukolainat\")\n",
 					"\n",
-					"# Split the 'kokoelmat0' column into two parts based on the comma\n",
-					"df = df.withColumn(\"kunta\", split(df[\"kokoelmat0\"], \",\").getItem(0)) \\\n",
-					"       .withColumn(\"year\", split(df[\"kokoelmat0\"], \",\").getItem(1))\n",
-					"\n",
-					"# Drop the original 'kokoelmat0' column\n",
-					"df = df.drop(\"kokoelmat0\")\n",
-					"\n",
-					"# Reorder columns to have 'kunta' and 'year' as the first columns\n",
-					"new_order = [\"kunta\", \"year\"] + [col for col in df.columns if col not in [\"kunta\", \"year\"]]\n",
-					"df = df.select(new_order)\n",
-					"\n",
-					"# Show the updated DataFrame\n",
-					"display(df)\n",
-					"\n",
-					"# Print the updated column names to verify the order\n",
+					"# Print the updated column names to verify\n",
 					"print(\"Updated Columns in DataFrame:\")\n",
 					"for col in df.columns:\n",
-					"    print(col)"
+					"    print(col)\n",
+					"\n",
+					"# Show the updated schema to verify the changes\n",
+					"df.printSchema()"
 				],
-				"execution_count": 8
+				"execution_count": 75
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"# Check the types of the columns\n",
-					"for column, dtype in df.dtypes:\n",
-					"    print(f\"Column: {column}, Type: {dtype}\")"
+					"from pyspark.sql.functions import col\n",
+					"from pyspark.sql.types import IntegerType\n",
+					"\n",
+					"# Get all column names except \"kunta\"\n",
+					"columns_to_convert = [field.name for field in df.schema.fields if field.name != \"kunta\"]\n",
+					"\n",
+					"# Convert all selected columns to integer\n",
+					"for column in columns_to_convert:\n",
+					"    df = df.withColumn(column, col(column).cast(IntegerType()))\n",
+					"\n",
+					"# Show the updated schema\n",
+					"df.printSchema()"
 				],
-				"execution_count": 9
+				"execution_count": 76
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import col\n",
+					"from pyspark.sql.types import DecimalType\n",
+					"\n",
+					"# List of columns that should be converted to decimal\n",
+					"decimal_columns = [\n",
+					"    \"toimintakulut_tilastovuonna\",\n",
+					"    \"henkilöstökulut\",\n",
+					"    \"kirjastoaineistokulut\",\n",
+					"    \"kirjojen_hankintakulut\",\n",
+					"    \"eaineistokulut\",\n",
+					"    \"tilakustannukset\",\n",
+					"    \"muut_kulut\",\n",
+					"    \"toimintakulut_kuluvan_vuoden_talousarviossa\"\n",
+					"]\n",
+					"\n",
+					"# Define precision and scale (adjust as needed)\n",
+					"decimal_precision = 12  # Max number of digits\n",
+					"decimal_scale = 2       # Number of decimal places\n",
+					"\n",
+					"# Cast these columns to DecimalType\n",
+					"for column in decimal_columns:\n",
+					"    df = df.withColumn(column, col(column).cast(DecimalType(decimal_precision, decimal_scale)))\n",
+					"\n",
+					"# Show the updated schema to verify the changes\n",
+					"df.printSchema()"
+				],
+				"execution_count": 77
 			}
 		]
 	}
