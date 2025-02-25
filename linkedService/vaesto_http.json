@@ -1,0 +1,16 @@
+{
+	"name": "vaesto_http",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://geo.stat.fi/geoserver/vaestoalue/wfs?service=wfs&request=GetFeature&typeName=vaestoalue:kunta_vaki2023&outputFormat=json&SRSName=EPSG:4326",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
