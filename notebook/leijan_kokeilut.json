@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9f57fbed-ac85-4bc3-b77e-da269fec2ced"
+				"spark.autotune.trackingId": "db0b8949-6c74-439e-8b7b-c2aba39e4c09"
 			}
 		},
 		"metadata": {
@@ -52,7 +52,9 @@
 				"cell_type": "code",
 				"source": [
 					"import pandas\n",
-					"df = pandas.read_excel(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\", sheet_name='all')\n",
+					"import xlrd\n",
+					"workbook = xlrd.open_workbook_xls(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\", ignore_workbook_corruption=True)\n",
+					"df = pandas.read_excel(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2014.xls\", sheet_name='ALL', ignore_workbook_corruption=True)\n",
 					"sdf = spark.createDataFrame(df, inferSchema=True)"
 				],
 				"execution_count": null
