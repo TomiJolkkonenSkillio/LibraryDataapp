@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2172bd42-71d3-44e0-bd81-733ed2665153"
+				"spark.autotune.trackingId": "bb75b14f-3947-4332-b12d-4acc03651a03"
 			}
 		},
 		"metadata": {
@@ -63,6 +63,9 @@
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
 					"from pyspark.sql import SparkSession\n",
 					"\n",
@@ -76,6 +79,12 @@
 					"df = spark.read.format(\"com.crealytics.spark.excel\") \\\n",
 					"    .option(\"header\", \"true\").option(\"inferSchema\", \"true\").option(\"dataAddress\", \"'All'!A1\").load(excel_path)  # Load the Excel file\n",
 					"\n",
+					"display(df)\n",
+					"\n",
+					"# Drop the unwanted column\n",
+					"df = df.drop(\"Lainaus\")\n",
+					"df = df.drop(\"Talous\")\n",
+					"\n",
 					"# Show DataFrame schema and preview data\n",
 					"df.printSchema()\n",
 					"df.show(5)\n",
@@ -84,7 +93,7 @@
 					"csv_output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2015.csv\"\n",
 					"df.write.mode(\"overwrite\").option(\"header\", \"true\").csv(csv_output_path)"
 				],
-				"execution_count": 8
+				"execution_count": 1
 			}
 		]
 	}
