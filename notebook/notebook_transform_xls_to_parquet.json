@@ -1,5 +1,5 @@
 {
-	"name": "leijan_lib2014_transform_csv",
+	"name": "notebook_transform_xls_to_parquet",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b538ddae-e949-490e-9cac-98c5e33aa761"
+				"spark.autotune.trackingId": "de7c372d-4579-4d0e-9786-e79aaa0e1dcc"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 					"# Display the final combined DataFrame\n",
 					"display(df_combined)"
 				],
-				"execution_count": 71
+				"execution_count": 78
 			},
 			{
 				"cell_type": "code",
@@ -101,7 +101,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 72
+				"execution_count": 79
 			},
 			{
 				"cell_type": "code",
@@ -130,7 +130,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 73
+				"execution_count": 80
 			},
 			{
 				"cell_type": "code",
@@ -159,7 +159,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 74
+				"execution_count": 81
 			},
 			{
 				"cell_type": "code",
@@ -178,7 +178,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 75
+				"execution_count": 82
 			},
 			{
 				"cell_type": "code",
@@ -196,7 +196,7 @@
 					"# Show the updated schema\n",
 					"df.printSchema()"
 				],
-				"execution_count": 76
+				"execution_count": 83
 			},
 			{
 				"cell_type": "code",
@@ -227,7 +227,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 77
+				"execution_count": 84
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": null
+				"execution_count": 85
 			}
 		]
 	}
