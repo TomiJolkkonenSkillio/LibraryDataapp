@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8d17d0e0-ca4f-46a5-86a8-c83a9dd789c2"
+				"spark.autotune.trackingId": "f7d1238b-9cff-42e2-a8a7-e7c151e97dc3"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 23
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -84,10 +84,10 @@
 					"\n",
 					"# Function to rename columns: remove numbers, parentheses, hyphens, and make lowercase\n",
 					"new_columns = [re.sub(r'[^\\w\\s]', '', col)  # Remove special characters like (), -, etc.\n",
-					"               .replace(\" \", \"_\")  # Replace spaces with underscores\n",
-					"               .lower()  # Convert to lowercase\n",
-					"               .replace(r'\\d+', '')  # Remove digits\n",
-					"               for col in df.columns]\n",
+					"            .replace(r'\\d+', '')  # Remove digits\n",
+					"            .replace(\" \", \"_\")  # Replace spaces with underscores\n",
+					"            .lower()  # Convert to lowercase\n",
+					"            for col in df.columns]\n",
 					"\n",
 					"# Apply new column names\n",
 					"for old_name, new_name in zip(df.columns, new_columns):\n",
