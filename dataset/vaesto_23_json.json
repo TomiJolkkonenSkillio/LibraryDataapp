@@ -1,0 +1,17 @@
+{
+	"name": "vaesto_23_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "vaesto_http",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": {}
+	}
+}

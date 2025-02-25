@@ -1,0 +1,20 @@
+{
+	"name": "ADLS_vaesto_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "vaesto23.json",
+				"folderPath": "raw",
+				"fileSystem": "vaesto"
+			}
+		},
+		"schema": {}
+	}
+}
