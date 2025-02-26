@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ccad43df-b375-488e-aee7-c7ff73095d64"
+				"spark.autotune.trackingId": "f965040e-49e3-40e0-b3a7-6169232ad966"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 24
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -82,13 +82,13 @@
 					"    elif column.lower() ==\"alue\":\n",
 					"        df = df.withColumnRenamed(column, \"kunta\")\n",
 					"    elif column.lower() ==\"yhteensä suomenkielinen väestö\":\n",
-					"        df = df.withColumnRenamed(column, \"suomenkielinen väestö\")\n",
+					"        df = df.withColumnRenamed(column, \"suomenkielinen_vaesto\")\n",
 					"    elif column.lower() ==\"yhteensä ruotsinkielinen väestö\":\n",
-					"        df = df.withColumnRenamed(column, \"ruotsinkielinen väestö\")\n",
+					"        df = df.withColumnRenamed(column, \"ruotsinkielinen_vaesto\")\n",
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 25
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"# Display the distinct values\n",
 					"print(distinct_vuosi_values)"
 				],
-				"execution_count": 26
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -122,7 +122,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 27
+				"execution_count": 4
 			}
 		]
 	}
