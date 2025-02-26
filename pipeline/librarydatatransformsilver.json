@@ -7,7 +7,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Delete1",
+						"activity": "deleteoldfiles",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -34,7 +34,7 @@
 				}
 			},
 			{
-				"name": "Delete1",
+				"name": "deleteoldfiles",
 				"type": "Delete",
 				"dependsOn": [],
 				"policy": {
