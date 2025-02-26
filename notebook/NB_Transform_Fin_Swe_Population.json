@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "651deb84-5755-404a-ad17-859f3cb34e5b"
+				"spark.autotune.trackingId": "e828e171-d0a5-4454-987a-7a7f077f5962"
 			}
 		},
 		"metadata": {
@@ -62,9 +62,60 @@
 					"# Show the schema and preview the data\n",
 					"#df.printSchema()\n",
 					"#df.show(truncate=False)\n",
+					"\n",
 					"display(df)"
 				],
-				"execution_count": 3
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"import re\n",
+					"\n",
+					"# Function to rename columns: remove numbers, parentheses, hyphens, and make lowercase\n",
+					"new_columns = [re.sub(r'[^\\w\\s]|\\d+', '', col) # Remove numbers and special characters like (), -, etc.\n",
+					"                .strip()\n",
+					"                .replace(\" \", \"_\") # Replace spaces with underscores\n",
+					"                .replace(\"ä\", \"a\")  # Replace ä with a\n",
+					"                .replace(\"ö\", \"o\")  # Replace ö with o\n",
+					"                .lower() # Convert to lowercase\n",
+					"            for col in df.columns]\n",
+					"        \n",
+					"# Apply new column names\n",
+					"for old_name, new_name in zip(df.columns, new_columns):\n",
+					"    df = df.withColumnRenamed(old_name, new_name)\n",
+					"\n",
+					"# Rename \"alue\" to \"kunta\" if it exists\n",
+					"if \"alue\" in df.columns:\n",
+					"    df = df.withColumnRenamed(\"alue\", \"kunta\")\n",
+					"\n",
+					"# Show the DataFrame with the updated column names\n",
+					"display(df)\n",
+					"\n",
+					"# Print the updated column names in separate lines\n",
+					"print(\"Updated Columns in DataFrame:\")\n",
+					"for col in df.columns:\n",
+					"    print(col)\n",
+					"\n",
+					"print(f\"Total number of columns: {len(df.columns)}\")"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Define output path\n",
+					"output_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet\"\n",
+					"\n",
+					"# Save DataFrame as Parquet\n",
+					"df.write.mode(\"overwrite\").parquet(output_path)\n",
+					"\n",
+					"print(\"Data successfully saved to ADLS in Parquet format.\")"
+				],
+				"execution_count": 15
 			}
 		]
 	}
