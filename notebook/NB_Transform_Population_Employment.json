@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f9f5ad7f-587c-48b2-b32e-081833f02ee1"
+				"spark.autotune.trackingId": "e5fa1f52-63e7-4d5f-8a7e-a930d130d493"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"\n",
 					"#display(df1)"
 				],
-				"execution_count": 79
+				"execution_count": 112
 			},
 			{
 				"cell_type": "code",
@@ -80,13 +80,13 @@
 					"import re\n",
 					"from pyspark.sql.functions import lit\n",
 					"\n",
-					"df1 = df1.withColumnRenamed(\"2014\", \"yhteensa\")\n",
+					"df1 = df1.withColumnRenamed(\"2014\", \"luku\")\n",
 					"\n",
 					"df1 = df1.withColumn(\"vuosi\", lit(2014))\n",
 					"df1=df1.toPandas()\n",
 					"#display(df1)"
 				],
-				"execution_count": 80
+				"execution_count": 113
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"\n",
 					"#display(df2)"
 				],
-				"execution_count": 81
+				"execution_count": 114
 			},
 			{
 				"cell_type": "code",
@@ -120,12 +120,12 @@
 					"import pandas as pd\n",
 					"\n",
 					"df_pd2 = df2.toPandas()\n",
-					"df_melted2 = pd.melt(df_pd2, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='yhteensa')\n",
+					"df_melted2 = pd.melt(df_pd2, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='luku')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
 					"#df_melted_spark2 = spark.createDataFrame(df_melted2)\n",
 					"#display(df_melted_spark2)"
 				],
-				"execution_count": 82
+				"execution_count": 115
 			},
 			{
 				"cell_type": "code",
@@ -137,7 +137,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 83
+				"execution_count": 116
 			},
 			{
 				"cell_type": "code",
@@ -160,7 +160,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 84
+				"execution_count": 117
 			},
 			{
 				"cell_type": "code",
@@ -171,12 +171,12 @@
 					"import pandas as pd\n",
 					"\n",
 					"df_pd3 = df3.toPandas()\n",
-					"df_melted3 = pd.melt(df_pd3, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='yhteensa')\n",
+					"df_melted3 = pd.melt(df_pd3, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='luku')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
 					"#df_melted_spark3 = spark.createDataFrame(df_melted3)\n",
 					"#display(df_melted_spark3)"
 				],
-				"execution_count": 85
+				"execution_count": 118
 			},
 			{
 				"cell_type": "code",
@@ -188,7 +188,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 86
+				"execution_count": 119
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 87
+				"execution_count": 120
 			},
 			{
 				"cell_type": "code",
@@ -222,12 +222,12 @@
 					"import pandas as pd\n",
 					"\n",
 					"df_pd4 = df4.toPandas()\n",
-					"df_melted4 = pd.melt(df_pd4, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='yhteensa')\n",
+					"df_melted4 = pd.melt(df_pd4, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='luku')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
 					"#df_melted_spark4 = spark.createDataFrame(df_melted4)\n",
 					"#display(df_melted_spark4)"
 				],
-				"execution_count": 88
+				"execution_count": 121
 			},
 			{
 				"cell_type": "code",
@@ -248,7 +248,7 @@
 					"spark_df.printSchema()\n",
 					"\n",
 					"# Convert 'yhteensa' to int (from long)\n",
-					"spark_df = spark_df.withColumn('yhteensa', col('yhteensa').cast('int'))\n",
+					"spark_df = spark_df.withColumn('luku', col('luku').cast('int'))\n",
 					"\n",
 					"# Convert 'vuosi' to int (from string)\n",
 					"spark_df = spark_df.withColumn('vuosi', col('vuosi').cast('int'))\n",
@@ -265,9 +265,23 @@
 					"# Display the distinct values\n",
 					"print(distinct_vuosi_values)\n",
 					"\n",
-					"#display(spark_df)"
+					"spark_df = spark_df.withColumnRenamed(\"Alue\", \"kunta\")\n",
+					"spark_df = spark_df.withColumnRenamed(\"Pääasiallinen toiminta\", \"joukko\")\n",
+					"\n",
+					"display(spark_df)"
 				],
-				"execution_count": 95
+				"execution_count": 123
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"spark_df = spark_df.filter(spark_df.kunta != \"KOKO MAA\")\n",
+					"display(spark_df)"
+				],
+				"execution_count": 124
 			}
 		]
 	}
