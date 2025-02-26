@@ -1,23 +1,23 @@
 {
-	"name": "silverlibrarydataflowparquet",
+	"name": "ADLS_vaesto_json",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "silver"
+			"name": "ADLS_vaesto_sinks"
 		},
 		"annotations": [],
-		"type": "Parquet",
+		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "silver/librarydata",
-				"fileSystem": "library"
-			},
-			"compressionCodec": null
+				"fileName": "vaesto23.json",
+				"folderPath": "raw",
+				"fileSystem": "vaesto"
+			}
 		},
-		"schema": []
+		"schema": {}
 	}
 }
