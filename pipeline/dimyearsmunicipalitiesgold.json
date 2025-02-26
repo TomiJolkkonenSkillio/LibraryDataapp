@@ -1,9 +1,9 @@
 {
-	"name": "librarydatatransformgold",
+	"name": "dimyearsmunicipalitiesgold",
 	"properties": {
 		"activities": [
 			{
-				"name": "librarydatatransformgold",
+				"name": "dimyearsmunicipalitiesgold",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "librarydatatransformgold",
+						"referenceName": "dimyearsmunicipalitiesgold",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -27,6 +27,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "silver"
+		},
 		"annotations": []
 	}
 }
