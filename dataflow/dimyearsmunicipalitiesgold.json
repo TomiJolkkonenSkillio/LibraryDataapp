@@ -164,10 +164,7 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          vuosi",
-				"     )) ~> sinkdimyears"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdimyears"
 			]
 		}
 	}
