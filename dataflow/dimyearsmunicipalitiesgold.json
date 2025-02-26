@@ -77,7 +77,7 @@
 				"     ignoreNoFilesFound: false) ~> ADLSvaesto",
 				"source(output(",
 				"          kunta as string,",
-				"          vuosi as string,",
+				"          vuosi as integer,",
 				"          kokoelmat as integer,",
 				"          kokoelmat_kirjat_yhteensa as integer,",
 				"          kokoelmat_suomenkieliset_kirjat as integer,",
@@ -147,6 +147,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     recreate:true,",
 				"     format: 'table',",
 				"     staged: true,",
 				"     allowCopyCommand: true,",
@@ -159,12 +160,16 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     recreate:true,",
 				"     format: 'table',",
 				"     staged: true,",
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdimyears"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          vuosi",
+				"     )) ~> sinkdimyears"
 			]
 		}
 	}
