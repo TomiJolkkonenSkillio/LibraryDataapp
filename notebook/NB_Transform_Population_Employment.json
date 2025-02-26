@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1177b852-806a-4782-9d27-d8fc02b49ec6"
+				"spark.autotune.trackingId": "1407c02c-933e-41f3-a7fb-bde55d15b3c2"
 			}
 		},
 		"metadata": {
@@ -59,7 +59,7 @@
 					"\n",
 					"#display(df1)"
 				],
-				"execution_count": 53
+				"execution_count": 100
 			},
 			{
 				"cell_type": "code",
@@ -67,18 +67,23 @@
 					"collapsed": false
 				},
 				"source": [
-					"# Drop the columns\n",
-					"df1 = df1.drop(\"Naiset 65 - 2014 Väestö 31.12.\", \"Naiset 18 - 64 2014 Väestö 31.12.\", \"Naiset 0 - 17 2014 Väestö 31.12.\",\"Naiset Yhteensä 2014 Väestö 31.12.\", \"Miehet 65 - 2014 Väestö 31.12.\", \"Miehet 18 - 64 2014 Väestö 31.12.\",\n",
-					"\"Miehet 0 - 17 2014 Väestö 31.12.\", \"Miehet Yhteensä 2014 Väestö 31.12.\", \"Yhteensä 65 - 2014 Väestö 31.12.\",\"Yhteensä 0 - 17 2014 Väestö 31.12.\",\"Yhteensä Yhteensä 2014 Väestö 31.12.\")\n",
+					"import re\n",
 					"\n",
-					"# Print the updated column names to verify\n",
-					"print(\"Updated Columns in DataFrame:\")\n",
-					"for col in df1.columns:\n",
-					"    print(col)\n",
+					"df1 = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/population_employment_14.csv\", header=True, inferSchema=True, encoding=\"Latin1\")\n",
+					"matching_regex = r\"Yhteensä Yhteensä (\\d.*) Väestö 31.12.\"\n",
 					"\n",
-					"#display(df1)"
+					"for column in df1.columns:\n",
+					"    print(column)\n",
+					"    matchy = re.match(matching_regex, column)\n",
+					"    if matchy:\n",
+					"        print(f\"Rename column '{column}' to column '{matchy.groups()[0]}'\")\n",
+					"        df1 = df1.withColumnRenamed(column, matchy.groups()[0])\n",
+					"    elif column.lower() not in [\"alue\", \"pääasiallinen toiminta\"]:\n",
+					"        df1 = df1.drop(column)\n",
+					"\n",
+					"display(df1)"
 				],
-				"execution_count": null
+				"execution_count": 110
 			},
 			{
 				"cell_type": "code",
@@ -89,33 +94,16 @@
 					"import re\n",
 					"from pyspark.sql.functions import lit\n",
 					"\n",
-					"# Function to rename columns: remove numbers, parentheses, hyphens, and make lowercase\n",
-					"new_columns = [re.sub(r'[^\\w\\s]|\\d+', '', col) # Remove numbers and special characters like (), -, etc.\n",
-					"                .strip()\n",
-					"                .replace(\" \", \"_\") # Replace spaces with underscores\n",
-					"                .replace(\"ä\", \"a\")  # Replace ä with a\n",
-					"                .replace(\"ö\", \"o\")  # Replace ö with o\n",
-					"                .lower() # Convert to lowercase\n",
-					"            for col in df1.columns]\n",
-					"\n",
-					"# Apply new column names\n",
-					"for old_name, new_name in zip(df1.columns, new_columns):\n",
-					"    df1 = df1.withColumnRenamed(old_name, new_name)\n",
-					"\n",
-					"# Print the updated column names to verify\n",
-					"print(\"Updated Columns in DataFrame:\")\n",
-					"for col in df1.columns:\n",
-					"    print(col)\n",
-					"\n",
 					"# Rename \"alue\" to \"kunta\"\n",
 					"df1 = df1.withColumnRenamed(\"alue\", \"kunta\")\n",
-					"df1 = df1.withColumnRenamed(\"yhteensa_____vaesto\", \"yhteensa\")\n",
+					"df1 = df1.withColumnRenamed(\"Pääasiallinen toiminta\", \"paaasiallinen_toiminta\")\n",
+					"df1 = df1.withColumnRenamed(\"2014\", \"yhteensa\")\n",
 					"\n",
 					"df1 = df1.withColumn(\"year\", lit(2014))\n",
 					"\n",
 					"display(df1)"
 				],
-				"execution_count": null
+				"execution_count": 111
 			},
 			{
 				"cell_type": "code",
@@ -130,66 +118,46 @@
 					"    print(col)\n",
 					"display(df2)"
 				],
-				"execution_count": null
+				"execution_count": 85
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
-					"# List of columns to drop\n",
-					"columns_to_drop = [\n",
-					"    \"Yhteensä 0 - 17 2015 Väestö 31.12.\",\n",
-					"    \"Yhteensä 0 - 17 2016 Väestö 31.12.\",\n",
-					"    \"Yhteensä 0 - 17 2017 Väestö 31.12.\",\n",
-					"    \"Yhteensä 18 - 64 2015 Väestö 31.12.\",\n",
-					"    \"Yhteensä 18 - 64 2016 Väestö 31.12.\",\n",
-					"    \"Yhteensä 18 - 64 2017 Väestö 31.12.\",\n",
-					"    \"Yhteensä 65 - 2015 Väestö 31.12.\",\n",
-					"    \"Yhteensä 65 - 2016 Väestö 31.12.\",\n",
-					"    \"Yhteensä 65 - 2017 Väestö 31.12.\",\n",
-					"    \"Miehet Yhteensä 2015 Väestö 31.12.\",\n",
-					"    \"Miehet Yhteensä 2016 Väestö 31.12.\",\n",
-					"    \"Miehet Yhteensä 2017 Väestö 31.12.\",\n",
-					"    \"Miehet 0 - 17 2015 Väestö 31.12.\",\n",
-					"    \"Miehet 0 - 17 2016 Väestö 31.12.\",\n",
-					"    \"Miehet 0 - 17 2017 Väestö 31.12.\",\n",
-					"    \"Miehet 18 - 64 2015 Väestö 31.12.\",\n",
-					"    \"Miehet 18 - 64 2016 Väestö 31.12.\",\n",
-					"    \"Miehet 18 - 64 2017 Väestö 31.12.\",\n",
-					"    \"Miehet 65 - 2015 Väestö 31.12.\",\n",
-					"    \"Miehet 65 - 2016 Väestö 31.12.\",\n",
-					"    \"Miehet 65 - 2017 Väestö 31.12.\",\n",
-					"    \"Naiset Yhteensä 2015 Väestö 31.12.\",\n",
-					"    \"Naiset Yhteensä 2016 Väestö 31.12.\",\n",
-					"    \"Naiset Yhteensä 2017 Väestö 31.12.\",\n",
-					"    \"Naiset 0 - 17 2015 Väestö 31.12.\",\n",
-					"    \"Naiset 0 - 17 2016 Väestö 31.12.\",\n",
-					"    \"Naiset 0 - 17 2017 Väestö 31.12.\",\n",
-					"    \"Naiset 18 - 64 2015 Väestö 31.12.\",\n",
-					"    \"Naiset 18 - 64 2016 Väestö 31.12.\",\n",
-					"    \"Naiset 18 - 64 2017 Väestö 31.12.\",\n",
-					"    \"Naiset 65 - 2015 Väestö 31.12.\",\n",
-					"    \"Naiset 65 - 2016 Väestö 31.12.\",\n",
-					"    \"Naiset 65 - 2017 Väestö 31.12.\"\n",
-					"]\n",
+					"import re\n",
 					"\n",
-					"# Drop the columns\n",
-					"df2 = df2.drop(*columns_to_drop)\n",
+					"df2 = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/population_employment_15.csv\", header=True, inferSchema=True, encoding=\"Latin1\")\n",
+					"matchaava_regex = r\"Yhteensä Yhteensä (\\d.*) Väestö 31.12.\"\n",
 					"\n",
-					"# Print the updated column names to verify\n",
-					"print(\"Updated Columns in DataFrame:\")\n",
-					"for col in df2.columns:\n",
-					"    print(col)"
+					"for column in df2.columns:\n",
+					"    matchi = re.match(matchaava_regex, column)\n",
+					"    if matchi:\n",
+					"        print(f\"Rename column '{column}' to column '{matchi.groups()[0]}'\")\n",
+					"        df2 = df2.withColumnRenamed(column, matchi.groups()[0])\n",
+					"    elif column.lower() not in [\"alue\", \"pääasiallinen toiminta\"]:\n",
+					"        df2 = df2.drop(column)\n",
+					"\n",
+					"display(df2)"
 				],
-				"execution_count": 47
+				"execution_count": 114
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
-					"df2 = df2.withColumnRenamed(\"Yhteensä Yhteensä 2015 Väestö 31.12.\", \"2015\")\n",
-					"df2 = df2.withColumnRenamed(\"Yhteensä Yhteensä 2016 Väestö 31.12.\", \"2016\")\n",
-					"df2 = df2.withColumnRenamed(\"Yhteensä Yhteensä 2017 Väestö 31.12.\", \"2017\")"
+					"import pandas as pd\n",
+					"\n",
+					"df_pd = df2.toPandas()\n",
+					"df_melted = pd.melt(df_pd, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='year', value_name='yhteensa')\n",
+					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
+					"df_melted_spark = spark.createDataFrame(df_melted)\n",
+					"display(df_melted_spark)"
 				],
-				"execution_count": 50
+				"execution_count": 118
 			},
 			{
 				"cell_type": "code",
@@ -201,7 +169,7 @@
 					"\n",
 					"display(df3)"
 				],
-				"execution_count": null
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +181,7 @@
 					"\n",
 					"display(df4)"
 				],
-				"execution_count": null
+				"execution_count": 63
 			}
 		]
 	}
