@@ -5,6 +5,9 @@
 			"referenceName": "AzureSynapseAnalyticsdedicatedpool",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "gold"
+		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
 		"schema": [],
