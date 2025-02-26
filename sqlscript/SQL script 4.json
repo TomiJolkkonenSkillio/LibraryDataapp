@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 4",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [kategoria_id]\n,[kategoria_nimi]\n,[kategoria_alkaen]\n,[kategoria_paattyen]\n FROM [library].[dim_categories]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "group2sqlpool",
+				"poolName": "group2sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
