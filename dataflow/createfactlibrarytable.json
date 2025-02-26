@@ -15,10 +15,10 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "select1"
 				},
 				{
-					"name": "select1"
+					"name": "unpivot1"
 				}
 			],
 			"scriptLines": [
@@ -74,9 +74,6 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> libraryparquet",
-				"select1 derive(kategoria_id = ERROR_FUNCTION(''),",
-				"          lainausmaara = ERROR_FUNCTION(''),",
-				"          kokoelma = ERROR_FUNCTION('')) ~> derivedColumn1",
 				"libraryparquet select(mapColumn(",
 				"          kunta,",
 				"          vuosi,",
@@ -113,7 +110,27 @@
 				"          lainaus_dvd_ja_blu_ray_levyt",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 unpivot(output(",
+				"          ",
+				"     ),",
+				"     ungroupBy(kokoelmat_suomenkieliset_kirjat,",
+				"          kokoelmat_ruotsinkieliset_kirjat,",
+				"          kokoelmat_muunkieliset_kirjat,",
+				"          kokoelmat_kaunokirjat_aikuiset,",
+				"          kokoelmat_kaunokirjat_lapset,",
+				"          kokoelmat_tietokirjat_aikuiset,",
+				"          kokoelmat_tietokirjat_lapset,",
+				"          kokoelmat_nuotit_ja_partituurit,",
+				"          kokoelmat_musiikkiaanitteet,",
+				"          kokoelmat_muut_aanitteet,",
+				"          kokoelmat_videotallenteet,",
+				"          kokoelmat_muut_aineistot,",
+				"          kokoelmat_videot,",
+				"          kokoelmat_cd_rom_levyt,",
+				"          kokoelmat_dvd_ja_blue_ray_levyt),",
+				"     lateral: true,",
+				"     ignoreNullPivots: false) ~> unpivot1"
 			]
 		}
 	}
