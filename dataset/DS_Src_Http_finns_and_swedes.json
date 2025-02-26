@@ -1,20 +1,16 @@
 {
-	"name": "DS_Src_HTTP_PopulationEmployment_JSON",
+	"name": "DS_Src_Http_finns_and_swedes",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_PopulationEmployment",
+			"referenceName": "Http_Fetch_Finns_and_Swedes",
 			"type": "LinkedServiceReference"
 		},
-		"folder": {
-			"name": "HTTP_vaesto_sources"
-		},
 		"annotations": [],
-		"type": "Json",
+		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation"
 			}
-		},
-		"schema": {}
+		}
 	}
 }
