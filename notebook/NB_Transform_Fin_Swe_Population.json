@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9ac2d080-c3a1-4370-b09f-3ed4d2964005"
+				"spark.autotune.trackingId": "8c1fb07d-9322-405c-b0fc-eed995e2de0c"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 18
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -88,7 +88,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 19
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"# Display the distinct values\n",
 					"print(distinct_vuosi_values)"
 				],
-				"execution_count": 23
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -122,7 +122,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 21
+				"execution_count": 27
 			}
 		]
 	}
