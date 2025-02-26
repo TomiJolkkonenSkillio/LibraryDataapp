@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "829a7123-a994-4236-858e-0215200ed398"
+				"spark.autotune.trackingId": "9ac2d080-c3a1-4370-b09f-3ed4d2964005"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 13
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -73,36 +73,43 @@
 					"collapsed": false
 				},
 				"source": [
-					"import re\n",
+					"df = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/languages_data.csv\", header=True, inferSchema=True, encoding=\"Latin1\")\n",
+					"for column in df.columns:\n",
+					"    if column.lower() not in [\"alue\", \"vuosi\",\"yhteensä suomenkielinen väestö\",\"yhteensä ruotsinkielinen väestö\"]:\n",
+					"        df = df.drop(column)\n",
+					"    elif column.lower() ==\"vuosi\":\n",
+					"        df = df.withColumnRenamed(column, \"vuosi\")\n",
+					"    elif column.lower() ==\"alue\":\n",
+					"        df = df.withColumnRenamed(column, \"kunta\")\n",
+					"    elif column.lower() ==\"yhteensä suomenkielinen väestö\":\n",
+					"        df = df.withColumnRenamed(column, \"suomenkielinen väestö\")\n",
+					"    elif column.lower() ==\"yhteensä ruotsinkielinen väestö\":\n",
+					"        df = df.withColumnRenamed(column, \"ruotsinkielinen väestö\")\n",
 					"\n",
-					"# Function to rename columns: remove numbers, parentheses, hyphens, and make lowercase\n",
-					"new_columns = [re.sub(r'[^\\w\\s]|\\d+', '', col) # Remove numbers and special characters like (), -, etc.\n",
-					"                .strip()\n",
-					"                .replace(\" \", \"_\") # Replace spaces with underscores\n",
-					"                .replace(\"ä\", \"a\")  # Replace ä with a\n",
-					"                .replace(\"ö\", \"o\")  # Replace ö with o\n",
-					"                .lower() # Convert to lowercase\n",
-					"            for col in df.columns]\n",
-					"        \n",
-					"# Apply new column names\n",
-					"for old_name, new_name in zip(df.columns, new_columns):\n",
-					"    df = df.withColumnRenamed(old_name, new_name)\n",
-					"\n",
-					"# Rename \"alue\" to \"kunta\" if it exists\n",
-					"if \"alue\" in df.columns:\n",
-					"    df = df.withColumnRenamed(\"alue\", \"kunta\")\n",
-					"\n",
-					"# Show the DataFrame with the updated column names\n",
-					"display(df)\n",
-					"\n",
-					"# Print the updated column names in separate lines\n",
-					"print(\"Updated Columns in DataFrame:\")\n",
-					"for col in df.columns:\n",
-					"    print(col)\n",
-					"\n",
-					"print(f\"Total number of columns: {len(df.columns)}\")"
+					"display(df)"
 				],
-				"execution_count": 14
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"df.printSchema()\n",
+					"df = df.filter(df.kunta != \"KOKO MAA\")\n",
+					"#display(df)\n",
+					"\n",
+					"# Get distinct values from the 'vuosi' column\n",
+					"distinct_vuosi = df.select('vuosi').distinct().collect()\n",
+					"\n",
+					"# Convert the result into a list of values\n",
+					"distinct_vuosi_values = [row['vuosi'] for row in distinct_vuosi]\n",
+					"\n",
+					"# Display the distinct values\n",
+					"print(distinct_vuosi_values)"
+				],
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -115,7 +122,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 15
+				"execution_count": 21
 			}
 		]
 	}
