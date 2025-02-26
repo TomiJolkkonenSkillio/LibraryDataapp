@@ -1,9 +1,9 @@
 {
-	"name": "Pipeline 1",
+	"name": "economycsv",
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "createeconomycsv",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -15,6 +15,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataflow": {
+						"referenceName": "createeconomycsv",
+						"type": "DataFlowReference"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -23,6 +27,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "silver"
+		},
 		"annotations": []
 	}
 }

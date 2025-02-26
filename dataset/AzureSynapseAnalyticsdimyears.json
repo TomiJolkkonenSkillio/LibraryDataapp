@@ -1,0 +1,19 @@
+{
+	"name": "AzureSynapseAnalyticsdimyears",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalyticsdedicatedpool",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "library",
+			"table": "dim_years"
+		}
+	}
+}

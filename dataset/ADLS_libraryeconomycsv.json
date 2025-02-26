@@ -1,22 +1,27 @@
 {
-	"name": "DS_Snk_ADSL_PopulationEmployment_Binary",
+	"name": "ADLS_libraryeconomycsv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "ADLS_vaesto_sinks"
+			"name": "silver"
 		},
 		"annotations": [],
-		"type": "Binary",
+		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "population_employment_14.csv",
-				"folderPath": "raw",
+				"fileName": "libraryeconomy.csv",
+				"folderPath": "silver/economy",
 				"fileSystem": "vaesto"
-			}
-		}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
 	}
 }
