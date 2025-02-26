@@ -31,6 +31,15 @@
 			"transformations": [
 				{
 					"name": "selectonlykuntaandid"
+				},
+				{
+					"name": "groupbyvuosi"
+				},
+				{
+					"name": "selectonlyvuosi"
+				},
+				{
+					"name": "sortasc"
 				}
 			],
 			"scriptLines": [
@@ -117,6 +126,14 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectonlykuntaandid",
+				"ADLSsilverlibrary aggregate(groupBy(vuosi),",
+				"     kunta = count(kunta)) ~> groupbyvuosi",
+				"groupbyvuosi select(mapColumn(",
+				"          vuosi",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlyvuosi",
+				"selectonlyvuosi sort(asc(vuosi, true)) ~> sortasc",
 				"selectonlykuntaandid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
