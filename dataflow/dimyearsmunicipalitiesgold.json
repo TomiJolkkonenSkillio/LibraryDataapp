@@ -147,6 +147,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     recreate:true,",
 				"     format: 'table',",
 				"     staged: true,",
 				"     allowCopyCommand: true,",
@@ -165,7 +166,10 @@
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdimyears"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          vuosi",
+				"     )) ~> sinkdimyears"
 			]
 		}
 	}
