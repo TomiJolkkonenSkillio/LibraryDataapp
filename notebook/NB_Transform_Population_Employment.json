@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f46bba53-4f10-49a9-b500-e4027d679b0f"
+				"spark.autotune.trackingId": "bddd3d23-8480-40e6-a06a-209f259d4878"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"\n",
 					"#display(df1)"
 				],
-				"execution_count": 40
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -86,7 +86,7 @@
 					"df1=df1.toPandas()\n",
 					"#display(df1)"
 				],
-				"execution_count": 41
+				"execution_count": 58
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"\n",
 					"#display(df2)"
 				],
-				"execution_count": 42
+				"execution_count": 59
 			},
 			{
 				"cell_type": "code",
@@ -125,7 +125,7 @@
 					"#df_melted_spark2 = spark.createDataFrame(df_melted2)\n",
 					"#display(df_melted_spark2)"
 				],
-				"execution_count": 43
+				"execution_count": 60
 			},
 			{
 				"cell_type": "code",
@@ -137,7 +137,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 44
+				"execution_count": 61
 			},
 			{
 				"cell_type": "code",
@@ -160,7 +160,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 45
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -176,7 +176,7 @@
 					"#df_melted_spark3 = spark.createDataFrame(df_melted3)\n",
 					"#display(df_melted_spark3)"
 				],
-				"execution_count": 46
+				"execution_count": 63
 			},
 			{
 				"cell_type": "code",
@@ -188,7 +188,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 47
+				"execution_count": 64
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 48
+				"execution_count": 65
 			},
 			{
 				"cell_type": "code",
@@ -227,7 +227,7 @@
 					"#df_melted_spark4 = spark.createDataFrame(df_melted4)\n",
 					"#display(df_melted_spark4)"
 				],
-				"execution_count": 49
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
@@ -270,7 +270,7 @@
 					"\n",
 					"display(spark_df)"
 				],
-				"execution_count": 50
+				"execution_count": 67
 			},
 			{
 				"cell_type": "code",
@@ -281,7 +281,7 @@
 					"spark_df = spark_df.filter(spark_df.kunta != \"KOKO MAA\")\n",
 					"display(spark_df)"
 				],
-				"execution_count": 51
+				"execution_count": 68
 			},
 			{
 				"cell_type": "code",
@@ -299,7 +299,7 @@
 					"# Display the result\n",
 					"display(df_pivoted_ordered)"
 				],
-				"execution_count": 52
+				"execution_count": 69
 			},
 			{
 				"cell_type": "code",
@@ -321,7 +321,7 @@
 					"display(df_pivoted_ordered)\n",
 					""
 				],
-				"execution_count": 53
+				"execution_count": 70
 			},
 			{
 				"cell_type": "code",
@@ -329,7 +329,7 @@
 					"for column in df_pivoted_ordered.columns:\n",
 					"    print(column)"
 				],
-				"execution_count": 54
+				"execution_count": 71
 			},
 			{
 				"cell_type": "code",
@@ -362,7 +362,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 55
+				"execution_count": 72
 			},
 			{
 				"cell_type": "code",
@@ -375,7 +375,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 56
+				"execution_count": 73
 			}
 		]
 	}
