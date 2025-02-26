@@ -1,20 +1,24 @@
 {
-	"name": "DS_Src_HTTP_PopulationEmployment_JSON",
+	"name": "vaesto23csv",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_PopulationEmployment",
+			"referenceName": "vaestohttpcsv",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
 			"name": "HTTP_vaesto_sources"
 		},
 		"annotations": [],
-		"type": "Json",
+		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation"
-			}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
 		},
-		"schema": {}
+		"schema": []
 	}
 }
