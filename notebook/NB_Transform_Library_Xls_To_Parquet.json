@@ -1,5 +1,5 @@
 {
-	"name": "notebook_transform_xls_to_parquet",
+	"name": "NB_Transform_Library_Xls_To_Parquet",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,

@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "34966317-1ce1-4743-99d6-dca92b0083a1"
+				"spark.autotune.trackingId": "e828e171-d0a5-4454-987a-7a7f077f5962"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 9
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -102,7 +102,7 @@
 					"\n",
 					"print(f\"Total number of columns: {len(df.columns)}\")"
 				],
-				"execution_count": 10
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -115,7 +115,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 12
+				"execution_count": 15
 			}
 		]
 	}
