@@ -13,7 +13,14 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          kunta as string,",
@@ -66,7 +73,47 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> libraryparquet"
+				"     format: 'parquet') ~> libraryparquet",
+				"select1 derive(kategoria_id = ERROR_FUNCTION(''),",
+				"          lainausmaara = ERROR_FUNCTION(''),",
+				"          kokoelma = ERROR_FUNCTION('')) ~> derivedColumn1",
+				"libraryparquet select(mapColumn(",
+				"          kunta,",
+				"          vuosi,",
+				"          kokoelmat_suomenkieliset_kirjat,",
+				"          kokoelmat_ruotsinkieliset_kirjat,",
+				"          kokoelmat_muunkieliset_kirjat,",
+				"          kokoelmat_kaunokirjat_aikuiset,",
+				"          kokoelmat_kaunokirjat_lapset,",
+				"          kokoelmat_tietokirjat_aikuiset,",
+				"          kokoelmat_tietokirjat_lapset,",
+				"          kokoelmat_nuotit_ja_partituurit,",
+				"          kokoelmat_musiikkiaanitteet,",
+				"          kokoelmat_muut_aanitteet,",
+				"          kokoelmat_videotallenteet,",
+				"          kokoelmat_muut_aineistot,",
+				"          kokoelmat_videot,",
+				"          kokoelmat_cd_rom_levyt,",
+				"          kokoelmat_dvd_ja_blue_ray_levyt,",
+				"          lainaus_suomenkieliset_kirjat,",
+				"          lainaus_ruotsinkieliset_kirjat,",
+				"          lainaus_muunkieliset_kirjat,",
+				"          lainaus_kaunokirjat_aikuiset,",
+				"          lainaus_kaunokirjat_lapset,",
+				"          lainaus_tietokirjat_aikuiset,",
+				"          lainaus_tietokirjat_lapset,",
+				"          lainaus_nuotit_ja_partituurit,",
+				"          lainaus_musiikkiaanitteet,",
+				"          lainaus_muut_aanitteet,",
+				"          lainaus_celian_aanikirjat_cd_levyina,",
+				"          lainaus_videotallenteet,",
+				"          lainaus_muut_aineistot,",
+				"          lainaus_videot,",
+				"          lainat_cd_rom_levyt,",
+				"          lainaus_dvd_ja_blu_ray_levyt",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
