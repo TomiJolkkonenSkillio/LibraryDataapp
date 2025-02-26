@@ -12,7 +12,15 @@
 					"name": "ADLSvaesto"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimmunicipalities",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdimmunicipalitiesindedicatedpool"
+				}
+			],
 			"transformations": [
 				{
 					"name": "selectonlykuntaandid"
@@ -49,7 +57,19 @@
 				"          kunta = nimi",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectonlykuntaandid"
+				"     skipDuplicateMapOutputs: true) ~> selectonlykuntaandid",
+				"selectonlykuntaandid sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdimmunicipalitiesindedicatedpool"
 			]
 		}
 	}

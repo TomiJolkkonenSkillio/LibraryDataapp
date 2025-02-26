@@ -1,0 +1,16 @@
+{
+	"name": "AzureSynapseAnalyticsdimmunicipalities",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalyticsdedicatedpool",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "library",
+			"table": "dim_municipalities"
+		}
+	}
+}
