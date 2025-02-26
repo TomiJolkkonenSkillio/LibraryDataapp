@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d72ca483-7c5d-41bb-862b-ea2dd0542a56"
+				"spark.autotune.trackingId": "34966317-1ce1-4743-99d6-dca92b0083a1"
 			}
 		},
 		"metadata": {
@@ -108,7 +108,7 @@
 				"cell_type": "code",
 				"source": [
 					"# Define output path\n",
-					"output_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet\"\n",
+					"output_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet\"\n",
 					"\n",
 					"# Save DataFrame as Parquet\n",
 					"df.write.mode(\"overwrite\").parquet(output_path)\n",
