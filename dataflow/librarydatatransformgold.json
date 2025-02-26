@@ -3,11 +3,53 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_vaesto23_csv",
+						"type": "DatasetReference"
+					},
+					"name": "ADLSvaesto"
+				}
+			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "selectonlykuntaandid"
+				}
+			],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          FID as string,",
+				"          kunta as integer,",
+				"          vuosi as short,",
+				"          nimi as string,",
+				"          namn as string,",
+				"          name as string,",
+				"          til_vuosi as short,",
+				"          vaesto as integer,",
+				"          vaesto_p as double,",
+				"          miehet as integer,",
+				"          miehet_p as double,",
+				"          naiset as integer,",
+				"          naiset_p as double,",
+				"          ika_0_14 as integer,",
+				"          ika_0_14p as double,",
+				"          ika_15_64 as integer,",
+				"          ika_15_64p as double,",
+				"          ika_65_ as integer,",
+				"          ika_65_p as double,",
+				"          geom as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ADLSvaesto",
+				"ADLSvaesto select(mapColumn(",
+				"          kunta_id = kunta,",
+				"          kunta = nimi",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlykuntaandid"
 			]
 		}
 	}
