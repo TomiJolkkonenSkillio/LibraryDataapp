@@ -1,0 +1,27 @@
+{
+	"name": "ADLS_libraryeconomycsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "libraryeconomy.csv",
+				"folderPath": "silver/economy",
+				"fileSystem": "vaesto"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
