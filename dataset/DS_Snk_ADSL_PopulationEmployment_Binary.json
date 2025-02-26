@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "population_employment_19.csv",
+				"fileName": "population_employment_18.csv",
 				"folderPath": "raw",
 				"fileSystem": "vaesto"
 			}
