@@ -1,5 +1,5 @@
 {
-	"name": "notebook_transform_xls_to_parquet",
+	"name": "NB_Transform_Library_Xls_To_Parquet",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c94e4d05-fa4b-48c8-922c-49ad7259d5d7"
+				"spark.autotune.trackingId": "c3d5f698-357d-4d3d-965e-2ccd1a0e3bff"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 					"# Display the final combined DataFrame\n",
 					"display(df_combined)"
 				],
-				"execution_count": 10
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -114,7 +114,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 11
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -128,6 +128,8 @@
 					"new_columns = [re.sub(r'[^\\w\\s]|\\d+', '', col) # Remove numbers and special characters like (), -, etc.\n",
 					"                .strip()\n",
 					"                .replace(\" \", \"_\") # Replace spaces with underscores\n",
+					"                .replace(\"ä\", \"a\")  # Replace ä with a\n",
+					"                .replace(\"ö\", \"o\")  # Replace ö with o\n",
 					"                .lower() # Convert to lowercase\n",
 					"            for col in df.columns]\n",
 					"\n",
@@ -143,7 +145,7 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 12
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -152,17 +154,18 @@
 				},
 				"source": [
 					"# Drop the columns 'talous' and 'lainaus'\n",
-					"df = df.drop(\"talous\", \"lainaus\", \"lähetetyt_kaukolainat\")\n",
+					"df = df.drop(\"talous\", \"lainaus\", \"lahetetyt_kaukolainat\")\n",
 					"\n",
 					"# Print the updated column names to verify\n",
 					"print(\"Updated Columns in DataFrame:\")\n",
 					"for col in df.columns:\n",
 					"    print(col)\n",
 					"\n",
+					"print(f\"Total number of columns: {len(df.columns)}\")\n",
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 13
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -180,7 +183,7 @@
 					"# Show the updated schema\n",
 					"df.printSchema()"
 				],
-				"execution_count": 14
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -191,7 +194,7 @@
 					"# List of columns that should be converted to decimal\n",
 					"decimal_columns = [\n",
 					"    \"toimintakulut_tilastovuonna\",\n",
-					"    \"henkilöstökulut\",\n",
+					"    \"henkilostokulut\",\n",
 					"    \"kirjastoaineistokulut\",\n",
 					"    \"kirjojen_hankintakulut\",\n",
 					"    \"eaineistokulut\",\n",
@@ -211,7 +214,7 @@
 					"# Show the updated schema to verify the changes\n",
 					"df.printSchema()"
 				],
-				"execution_count": 15
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -227,7 +230,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 16
+				"execution_count": 24
 			}
 		]
 	}

@@ -1,0 +1,16 @@
+{
+	"name": "DS_Src_Http_finns_and_swedes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Http_Fetch_Finns_and_Swedes",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}
