@@ -1,67 +1,30 @@
 {
-	"name": "librarydatatransformgold",
+	"name": "createfactlibrarytable",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ADLS_vaesto23_csv",
-						"type": "DatasetReference"
-					},
-					"name": "ADLSvaesto"
-				},
-				{
-					"dataset": {
 						"referenceName": "silverlibrarydataflowparquet",
 						"type": "DatasetReference"
 					},
-					"name": "ADLSsilverlibrary"
+					"name": "libraryparquet"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "AzureSynapseAnalyticsdimmunicipalities",
-						"type": "DatasetReference"
-					},
-					"name": "sinkdimmunicipalitiesindedicatedpool"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
-					"name": "selectonlykuntaandid"
+					"name": "select1"
+				},
+				{
+					"name": "unpivot1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          FID as string,",
-				"          kunta as integer,",
-				"          vuosi as short,",
-				"          nimi as string,",
-				"          namn as string,",
-				"          name as string,",
-				"          til_vuosi as short,",
-				"          vaesto as integer,",
-				"          vaesto_p as double,",
-				"          miehet as integer,",
-				"          miehet_p as double,",
-				"          naiset as integer,",
-				"          naiset_p as double,",
-				"          ika_0_14 as integer,",
-				"          ika_0_14p as double,",
-				"          ika_15_64 as integer,",
-				"          ika_15_64p as double,",
-				"          ika_65_ as integer,",
-				"          ika_65_p as double,",
-				"          geom as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> ADLSvaesto",
-				"source(output(",
 				"          kunta as string,",
-				"          vuosi as string,",
+				"          vuosi as integer,",
 				"          kokoelmat as integer,",
 				"          kokoelmat_kirjat_yhteensa as integer,",
 				"          kokoelmat_suomenkieliset_kirjat as integer,",
@@ -110,25 +73,67 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> ADLSsilverlibrary",
-				"ADLSvaesto select(mapColumn(",
-				"          kunta_id = kunta,",
-				"          kunta = nimi",
+				"     format: 'parquet') ~> libraryparquet",
+				"libraryparquet select(mapColumn(",
+				"          kunta,",
+				"          vuosi,",
+				"          kokoelmat_suomenkieliset_kirjat,",
+				"          kokoelmat_ruotsinkieliset_kirjat,",
+				"          kokoelmat_muunkieliset_kirjat,",
+				"          kokoelmat_kaunokirjat_aikuiset,",
+				"          kokoelmat_kaunokirjat_lapset,",
+				"          kokoelmat_tietokirjat_aikuiset,",
+				"          kokoelmat_tietokirjat_lapset,",
+				"          kokoelmat_nuotit_ja_partituurit,",
+				"          kokoelmat_musiikkiaanitteet,",
+				"          kokoelmat_muut_aanitteet,",
+				"          kokoelmat_videotallenteet,",
+				"          kokoelmat_muut_aineistot,",
+				"          kokoelmat_videot,",
+				"          kokoelmat_cd_rom_levyt,",
+				"          kokoelmat_dvd_ja_blue_ray_levyt,",
+				"          lainaus_suomenkieliset_kirjat,",
+				"          lainaus_ruotsinkieliset_kirjat,",
+				"          lainaus_muunkieliset_kirjat,",
+				"          lainaus_kaunokirjat_aikuiset,",
+				"          lainaus_kaunokirjat_lapset,",
+				"          lainaus_tietokirjat_aikuiset,",
+				"          lainaus_tietokirjat_lapset,",
+				"          lainaus_nuotit_ja_partituurit,",
+				"          lainaus_musiikkiaanitteet,",
+				"          lainaus_muut_aanitteet,",
+				"          lainaus_celian_aanikirjat_cd_levyina,",
+				"          lainaus_videotallenteet,",
+				"          lainaus_muut_aineistot,",
+				"          lainaus_videot,",
+				"          lainat_cd_rom_levyt,",
+				"          lainaus_dvd_ja_blu_ray_levyt",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectonlykuntaandid",
-				"selectonlykuntaandid sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     staged: true,",
-				"     allowCopyCommand: true,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdimmunicipalitiesindedicatedpool"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 unpivot(output(",
+				"          kategoria as string,",
+				"          kokoelmat_suomenkieliset_kirjat as integer,",
+				"          kokoelmat_ruotsinkieliset_kirjat as integer,",
+				"          kokoelmat_muunkieliset_kirjat as integer",
+				"     ),",
+				"     ungroupBy(kokoelmat_suomenkieliset_kirjat,",
+				"          kokoelmat_ruotsinkieliset_kirjat,",
+				"          kokoelmat_muunkieliset_kirjat,",
+				"          kokoelmat_kaunokirjat_aikuiset,",
+				"          kokoelmat_kaunokirjat_lapset,",
+				"          kokoelmat_tietokirjat_aikuiset,",
+				"          kokoelmat_tietokirjat_lapset,",
+				"          kokoelmat_nuotit_ja_partituurit,",
+				"          kokoelmat_musiikkiaanitteet,",
+				"          kokoelmat_muut_aanitteet,",
+				"          kokoelmat_videotallenteet,",
+				"          kokoelmat_muut_aineistot,",
+				"          kokoelmat_videot,",
+				"          kokoelmat_cd_rom_levyt,",
+				"          kokoelmat_dvd_ja_blue_ray_levyt),",
+				"     lateral: true,",
+				"     ignoreNullPivots: false) ~> unpivot1"
 			]
 		}
 	}

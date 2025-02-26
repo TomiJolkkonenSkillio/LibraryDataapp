@@ -1,9 +1,9 @@
 {
-	"name": "librarydatatransformgold",
+	"name": "economycsv",
 	"properties": {
 		"activities": [
 			{
-				"name": "librarydatatransformgold",
+				"name": "createeconomycsv",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "librarydatatransformgold",
+						"referenceName": "createeconomycsv",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -27,6 +27,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "silver"
+		},
 		"annotations": []
 	}
 }

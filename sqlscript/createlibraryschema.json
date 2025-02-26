@@ -1,0 +1,17 @@
+{
+	"name": "createlibraryschema",
+	"properties": {
+		"content": {
+			"query": "CREATE SCHEMA [library]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "group2sqlpool",
+				"poolName": "group2sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

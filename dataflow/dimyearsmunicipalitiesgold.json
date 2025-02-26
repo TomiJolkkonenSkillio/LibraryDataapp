@@ -1,0 +1,176 @@
+{
+	"name": "dimyearsmunicipalitiesgold",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_vaesto23_csv",
+						"type": "DatasetReference"
+					},
+					"name": "ADLSvaesto"
+				},
+				{
+					"dataset": {
+						"referenceName": "silverlibrarydataflowparquet",
+						"type": "DatasetReference"
+					},
+					"name": "ADLSsilverlibrary"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimmunicipalities",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdimmunicipalitiesindedicatedpool"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimyears",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdimyears"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectonlykuntaandid"
+				},
+				{
+					"name": "groupbyvuosi"
+				},
+				{
+					"name": "selectonlyvuosi"
+				},
+				{
+					"name": "sortasc"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          FID as string,",
+				"          kunta as integer,",
+				"          vuosi as short,",
+				"          nimi as string,",
+				"          namn as string,",
+				"          name as string,",
+				"          til_vuosi as short,",
+				"          vaesto as integer,",
+				"          vaesto_p as double,",
+				"          miehet as integer,",
+				"          miehet_p as double,",
+				"          naiset as integer,",
+				"          naiset_p as double,",
+				"          ika_0_14 as integer,",
+				"          ika_0_14p as double,",
+				"          ika_15_64 as integer,",
+				"          ika_15_64p as double,",
+				"          ika_65_ as integer,",
+				"          ika_65_p as double,",
+				"          geom as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ADLSvaesto",
+				"source(output(",
+				"          kunta as string,",
+				"          vuosi as integer,",
+				"          kokoelmat as integer,",
+				"          kokoelmat_kirjat_yhteensa as integer,",
+				"          kokoelmat_suomenkieliset_kirjat as integer,",
+				"          kokoelmat_ruotsinkieliset_kirjat as integer,",
+				"          kokoelmat_muunkieliset_kirjat as integer,",
+				"          kokoelmat_kaunokirjat_aikuiset as integer,",
+				"          kokoelmat_kaunokirjat_lapset as integer,",
+				"          kokoelmat_tietokirjat_aikuiset as integer,",
+				"          kokoelmat_tietokirjat_lapset as integer,",
+				"          kokoelmat_nuotit_ja_partituurit as integer,",
+				"          kokoelmat_musiikkiaanitteet as integer,",
+				"          kokoelmat_muut_aanitteet as integer,",
+				"          kokoelmat_videotallenteet as integer,",
+				"          kokoelmat_muut_aineistot as integer,",
+				"          kokoelmat_videot as integer,",
+				"          kokoelmat_cd_rom_levyt as integer,",
+				"          kokoelmat_dvd_ja_blue_ray_levyt as integer,",
+				"          kokonaislainaus as integer,",
+				"          lainaus_yhteensa as integer,",
+				"          lainaus_kirjat_yhteensa as integer,",
+				"          lainaus_suomenkieliset_kirjat as integer,",
+				"          lainaus_ruotsinkieliset_kirjat as integer,",
+				"          lainaus_muunkieliset_kirjat as integer,",
+				"          lainaus_kaunokirjat_aikuiset as integer,",
+				"          lainaus_kaunokirjat_lapset as integer,",
+				"          lainaus_tietokirjat_aikuiset as integer,",
+				"          lainaus_tietokirjat_lapset as integer,",
+				"          lainaus_nuotit_ja_partituurit as integer,",
+				"          lainaus_musiikkiaanitteet as integer,",
+				"          lainaus_muut_aanitteet as integer,",
+				"          lainaus_celian_aanikirjat_cd_levyina as integer,",
+				"          lainaus_videotallenteet as integer,",
+				"          lainaus_muut_aineistot as integer,",
+				"          lainaus_videot as integer,",
+				"          lainat_cd_rom_levyt as integer,",
+				"          lainaus_dvd_ja_blu_ray_levyt as integer,",
+				"          toimintakulut_tilastovuonna as decimal(12,2),",
+				"          henkilostokulut as decimal(12,2),",
+				"          kirjastoaineistokulut as decimal(12,2),",
+				"          kirjojen_hankintakulut as decimal(12,2),",
+				"          e_aineistokulut as decimal(12,2),",
+				"          tilakustannukset as decimal(12,2),",
+				"          muut_kulut as decimal(12,2),",
+				"          toimintakulut_kuluvan_vuoden_talousarviossa as decimal(12,2)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> ADLSsilverlibrary",
+				"ADLSvaesto select(mapColumn(",
+				"          kunta_id = kunta,",
+				"          kunta = nimi",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlykuntaandid",
+				"ADLSsilverlibrary aggregate(groupBy(vuosi),",
+				"     kunta = count(kunta)) ~> groupbyvuosi",
+				"groupbyvuosi select(mapColumn(",
+				"          vuosi",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlyvuosi",
+				"selectonlyvuosi sort(asc(vuosi, true)) ~> sortasc",
+				"selectonlykuntaandid sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdimmunicipalitiesindedicatedpool",
+				"sortasc sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          vuosi",
+				"     )) ~> sinkdimyears"
+			]
+		}
+	}
+}
