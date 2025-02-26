@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f2db57c7-2b86-41e3-9a6b-d061df2ccd85"
+				"spark.autotune.trackingId": "fd98aaa3-6d52-491f-929e-7f77d4eed43c"
 			}
 		},
 		"metadata": {
@@ -54,11 +54,44 @@
 					"collapsed": false
 				},
 				"source": [
+					"from pyspark.sql import SparkSession\n",
+					"\n",
+					"# Initialize Spark session\n",
+					"spark = SparkSession.builder.appName(\"Combine CSVs\").getOrCreate()\n",
+					"\n",
+					"# Specific years to include\n",
+					"years = [14, 15, 18, 21]  \n",
+					"\n",
+					"# Generate file paths with two-digit years\n",
+					"file_paths = [\n",
+					"    f\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/population_employment{year}.csv\"\n",
+					"    for year in years\n",
+					"]\n",
+					"\n",
+					"# Read CSV files into DataFrames and combine\n",
+					"df_combined = None  # Initialize as None\n",
+					"\n",
+					"for file in file_paths:\n",
+					"    df = spark.read.option(\"header\", True).csv(file)  # Read each CSV\n",
+					"    if df_combined is None:\n",
+					"        df_combined = df  # First DataFrame\n",
+					"    else:\n",
+					"        df_combined = df_combined.unionByName(df, allowMissingColumns=True)  # Merge\n",
+					"\n",
+					"# Show or save the combined DataFrame\n",
+					"df_combined.show()  # Display the combined DataFrame\n",
+					"# df_combined.write.csv(\"output_path.csv\", header=True)  # Save if needed"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
 					"df = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/Population_employment.csv\", header=True, inferSchema=True, encoding=\"Latin1\")\n",
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 3
+				"execution_count": null
 			}
 		]
 	}
