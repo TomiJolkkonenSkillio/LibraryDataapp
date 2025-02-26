@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "NB_combine_economy_lang_population",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "19219076-8e00-4473-8a2e-8193ff73176c"
+				"spark.autotune.trackingId": "69f028f6-d313-4fc6-9e27-fb608da7c9aa"
 			}
 		},
 		"metadata": {
@@ -55,13 +55,26 @@
 				},
 				"source": [
 					"\n",
-					"adls_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/economy/\"\n",
+					"df_economy = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/economy/\", header=True, inferSchema=True)\n",
+					"df_lang = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet/\")\n",
 					"\n",
-					"df = spark.read.option(\"header\", \"true\").csv(adls_path)\n",
-					"\n",
-					"display(df)"
+					"display(df_economy)\n",
+					"display(df_lang)\n",
+					""
 				],
-				"execution_count": 1
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"df_combined = df_economy.join(df_lang, on=[\"kunta\", \"vuosi\"], how=\"outer\")\n",
+					"display(df_combined)\n",
+					""
+				],
+				"execution_count": 7
 			}
 		]
 	}
