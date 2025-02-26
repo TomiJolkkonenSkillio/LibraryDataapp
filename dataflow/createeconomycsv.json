@@ -1,0 +1,106 @@
+{
+	"name": "createeconomycsv",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silverlibrarydataflowparquet",
+						"type": "DatasetReference"
+					},
+					"name": "silverlibrary"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_libraryeconomycsv",
+						"type": "DatasetReference"
+					},
+					"name": "sinktoeconomycsv"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectonlyeconomy"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          kunta as string,",
+				"          vuosi as integer,",
+				"          kokoelmat as integer,",
+				"          kokoelmat_kirjat_yhteensa as integer,",
+				"          kokoelmat_suomenkieliset_kirjat as integer,",
+				"          kokoelmat_ruotsinkieliset_kirjat as integer,",
+				"          kokoelmat_muunkieliset_kirjat as integer,",
+				"          kokoelmat_kaunokirjat_aikuiset as integer,",
+				"          kokoelmat_kaunokirjat_lapset as integer,",
+				"          kokoelmat_tietokirjat_aikuiset as integer,",
+				"          kokoelmat_tietokirjat_lapset as integer,",
+				"          kokoelmat_nuotit_ja_partituurit as integer,",
+				"          kokoelmat_musiikkiaanitteet as integer,",
+				"          kokoelmat_muut_aanitteet as integer,",
+				"          kokoelmat_videotallenteet as integer,",
+				"          kokoelmat_muut_aineistot as integer,",
+				"          kokoelmat_videot as integer,",
+				"          kokoelmat_cd_rom_levyt as integer,",
+				"          kokoelmat_dvd_ja_blue_ray_levyt as integer,",
+				"          kokonaislainaus as integer,",
+				"          lainaus_yhteensa as integer,",
+				"          lainaus_kirjat_yhteensa as integer,",
+				"          lainaus_suomenkieliset_kirjat as integer,",
+				"          lainaus_ruotsinkieliset_kirjat as integer,",
+				"          lainaus_muunkieliset_kirjat as integer,",
+				"          lainaus_kaunokirjat_aikuiset as integer,",
+				"          lainaus_kaunokirjat_lapset as integer,",
+				"          lainaus_tietokirjat_aikuiset as integer,",
+				"          lainaus_tietokirjat_lapset as integer,",
+				"          lainaus_nuotit_ja_partituurit as integer,",
+				"          lainaus_musiikkiaanitteet as integer,",
+				"          lainaus_muut_aanitteet as integer,",
+				"          lainaus_celian_aanikirjat_cd_levyina as integer,",
+				"          lainaus_videotallenteet as integer,",
+				"          lainaus_muut_aineistot as integer,",
+				"          lainaus_videot as integer,",
+				"          lainat_cd_rom_levyt as integer,",
+				"          lainaus_dvd_ja_blu_ray_levyt as integer,",
+				"          toimintakulut_tilastovuonna as decimal(12,2),",
+				"          henkilostokulut as decimal(12,2),",
+				"          kirjastoaineistokulut as decimal(12,2),",
+				"          kirjojen_hankintakulut as decimal(12,2),",
+				"          e_aineistokulut as decimal(12,2),",
+				"          tilakustannukset as decimal(12,2),",
+				"          muut_kulut as decimal(12,2),",
+				"          toimintakulut_kuluvan_vuoden_talousarviossa as decimal(12,2)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> silverlibrary",
+				"silverlibrary select(mapColumn(",
+				"          kunta,",
+				"          vuosi,",
+				"          toimintakulut_tilastovuonna,",
+				"          henkilostokulut,",
+				"          kirjastoaineistokulut,",
+				"          kirjojen_hankintakulut,",
+				"          e_aineistokulut,",
+				"          tilakustannukset,",
+				"          muut_kulut,",
+				"          toimintakulut_kuluvan_vuoden_talousarviossa",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlyeconomy",
+				"selectonlyeconomy sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinktoeconomycsv"
+			]
+		}
+	}
+}
