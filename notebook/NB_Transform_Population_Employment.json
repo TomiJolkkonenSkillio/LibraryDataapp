@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b1cb88e1-5706-44b1-b7bf-43aa0fe9e3c5"
+				"spark.autotune.trackingId": "a06fcdae-8120-4599-a333-07035bcce412"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"\n",
 					"#display(df1)"
 				],
-				"execution_count": 1
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -86,7 +86,7 @@
 					"df1=df1.toPandas()\n",
 					"#display(df1)"
 				],
-				"execution_count": 2
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"\n",
 					"#display(df2)"
 				],
-				"execution_count": 3
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -125,7 +125,7 @@
 					"#df_melted_spark2 = spark.createDataFrame(df_melted2)\n",
 					"#display(df_melted_spark2)"
 				],
-				"execution_count": 4
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -137,7 +137,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 5
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -160,7 +160,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 6
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -176,7 +176,7 @@
 					"#df_melted_spark3 = spark.createDataFrame(df_melted3)\n",
 					"#display(df_melted_spark3)"
 				],
-				"execution_count": 7
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -188,7 +188,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 8
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 9
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -227,7 +227,7 @@
 					"#df_melted_spark4 = spark.createDataFrame(df_melted4)\n",
 					"#display(df_melted_spark4)"
 				],
-				"execution_count": 10
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -270,7 +270,7 @@
 					"\n",
 					"display(spark_df)"
 				],
-				"execution_count": 11
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -281,7 +281,7 @@
 					"spark_df = spark_df.filter(spark_df.kunta != \"KOKO MAA\")\n",
 					"display(spark_df)"
 				],
-				"execution_count": 12
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -299,7 +299,7 @@
 					"# Display the result\n",
 					"display(df_pivoted_ordered)"
 				],
-				"execution_count": 16
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -321,7 +321,7 @@
 					"display(df_pivoted_ordered)\n",
 					""
 				],
-				"execution_count": 20
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
@@ -329,7 +329,40 @@
 					"for column in df_pivoted_ordered.columns:\n",
 					"    print(column)"
 				],
-				"execution_count": 21
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# List of column names\n",
+					"columns = [\n",
+					"    \"kunta\",\n",
+					"    \"vuosi\",\n",
+					"    \"0-14 -vuotiaat\", \n",
+					"    \"elakelaiset\", \n",
+					"    \"muut_tyovoiman_ulkopuolella_olevat\", \n",
+					"    \"opiskelijat\", \n",
+					"    \"tyolliset\", \n",
+					"    \"tyottomat\", \n",
+					"    \"tyovoima\", \n",
+					"    \"tyovoiman_ulkopuolella_olevat\", \n",
+					"    \"varsiviilimiehet\", \n",
+					"    \"vakiluku\"\n",
+					"]\n",
+					"\n",
+					"# Loop through each column and count the number of null values\n",
+					"null_counts = {}\n",
+					"for column in columns:\n",
+					"    null_count = df_pivoted_ordered.filter(F.col(column).isNull()).count()\n",
+					"    null_counts[column] = null_count\n",
+					"\n",
+					"# Display the results\n",
+					"for column, count in null_counts.items():\n",
+					"    print(f\"Number of null values in '{column}': {count}\")"
+				],
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -342,7 +375,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": null
+				"execution_count": 37
 			}
 		]
 	}
