@@ -1,19 +1,16 @@
 {
-	"name": "DS_Snk_ADSL_PopulationEmployment_Binary",
+	"name": "DS_Snk_FinnsAndSwedes",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
-		},
-		"folder": {
-			"name": "ADLS_vaesto_sinks"
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "Population_employment.csv",
+				"fileName": "languages_data.csv",
 				"folderPath": "raw",
 				"fileSystem": "vaesto"
 			}
