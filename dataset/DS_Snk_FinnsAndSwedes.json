@@ -1,0 +1,19 @@
+{
+	"name": "DS_Snk_FinnsAndSwedes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "languages_data.csv",
+				"folderPath": "raw",
+				"fileSystem": "vaesto"
+			}
+		}
+	}
+}
