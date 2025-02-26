@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0aee2184-e9e9-4026-8a6b-df47b26215fd"
+				"spark.autotune.trackingId": "077f5ba7-8aea-4e03-94e3-0013a8a4f91d"
 			}
 		},
 		"metadata": {
@@ -76,6 +76,7 @@
 					"del column_names\n",
 					"\n",
 					"df_dim_category = spark.createDataFrame([(item,) for item in unique_columns], [\"kategoria_nimi\"])\n",
+					"print(unique_columns)\n",
 					"del unique_columns\n",
 					"\n",
 					"df_dim_category = df_dim_category.withColumn(\"kategoria_alkaen\", \n",
@@ -101,7 +102,7 @@
 					"\n",
 					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
 				],
-				"execution_count": 37
+				"execution_count": 38
 			}
 		]
 	}
