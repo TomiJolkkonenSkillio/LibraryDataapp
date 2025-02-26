@@ -19,6 +19,13 @@
 						"referenceName": "dimyearsmunicipalitiesgold",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "staging"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -28,7 +35,7 @@
 			}
 		],
 		"folder": {
-			"name": "silver"
+			"name": "gold"
 		},
 		"annotations": []
 	}
