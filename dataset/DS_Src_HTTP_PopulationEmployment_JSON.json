@@ -5,6 +5,9 @@
 			"referenceName": "LS_PopulationEmployment",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "HTTP_vaesto_sources"
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
