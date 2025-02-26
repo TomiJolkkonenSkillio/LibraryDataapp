@@ -13,7 +13,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "testi.parquet",
 				"folderPath": "silver/librarydata",
 				"fileSystem": "library"
 			},
