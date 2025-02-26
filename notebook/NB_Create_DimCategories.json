@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "33e7d211-b4b9-42c3-a633-398a7508f247"
+				"spark.autotune.trackingId": "c674f574-d5a8-48df-93d1-e6b2ec93b7a2"
 			}
 		},
 		"metadata": {
@@ -65,18 +65,14 @@
 					"    .option(\"dataAddress\", \"'All'!A1\") \\\n",
 					"    .load(\"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2023.xls\") \\\n",
 					"\n",
-					"#df = spark.read.parquet(\"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\")\n",
-					"display(df)\n",
 					"column_names = df.columns\n",
 					"del df\n",
-					"#print(column_names)\n",
 					"column_names = [name for name in column_names if name.startswith(\"Kokoelmat: \") or name.startswith(\"Lainaus: \")]\n",
 					"column_names = [name.replace(\"Lainaus: \", \"\").replace(\"Kokoelmat: \", \"\").replace(\"_\", \" \") for name in column_names]\n",
 					"column_names = [name.capitalize() for name in column_names]\n",
 					"unique_columns = []\n",
 					"[unique_columns.append(name) for name in column_names if name not in unique_columns and name != \"Kirjat yhteensä\" and name != \"Dvd ja blue-ray -levyt (-2017)\"]\n",
 					"del column_names\n",
-					"#print(unique_columns)\n",
 					"\n",
 					"df_dim_category = spark.createDataFrame([(item,) for item in unique_columns], [\"kategoria_nimi\"])\n",
 					"del unique_columns\n",
@@ -95,9 +91,6 @@
 					"                F.when(F.col(\"kategoria_nimi\").contains(\" (\"),\n",
 					"                F.split(F.col(\"kategoria_nimi\"), \" \\(\", -1)[0]).otherwise(F.col(\"kategoria_nimi\"))\n",
 					"                )\n",
-					"                \n",
-					"                \n",
-					"display(df_dim_category)\n",
 					"\n",
 					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
 				],
