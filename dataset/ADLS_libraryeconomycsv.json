@@ -5,6 +5,9 @@
 			"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "silver"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
