@@ -506,6 +506,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "bronze"
+		},
 		"annotations": []
 	}
 }
