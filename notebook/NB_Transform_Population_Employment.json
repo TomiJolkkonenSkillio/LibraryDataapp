@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a8cc91f4-041b-4be4-a158-73b7803daf4e"
+				"spark.autotune.trackingId": "cf13315f-d974-4bbc-8019-315e23f5d5ab"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"\n",
 					"#display(df1)"
 				],
-				"execution_count": null
+				"execution_count": 160
 			},
 			{
 				"cell_type": "code",
@@ -85,10 +85,10 @@
 					"df1 = df1.withColumnRenamed(\"2014\", \"yhteensa\")\n",
 					"\n",
 					"df1 = df1.withColumn(\"year\", lit(2014))\n",
-					"df1=df1.pandas()\n",
+					"df1=df1.toPandas()\n",
 					"#display(df1)"
 				],
-				"execution_count": null
+				"execution_count": 161
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"\n",
 					"#display(df2)"
 				],
-				"execution_count": 156
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -124,10 +124,10 @@
 					"df_pd2 = df2.toPandas()\n",
 					"df_melted2 = pd.melt(df_pd2, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='year', value_name='yhteensa')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
-					"df_melted_spark2 = spark.createDataFrame(df_melted2)\n",
+					"#df_melted_spark2 = spark.createDataFrame(df_melted2)\n",
 					"#display(df_melted_spark2)"
 				],
-				"execution_count": 157
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -175,8 +175,8 @@
 					"df_pd3 = df3.toPandas()\n",
 					"df_melted3 = pd.melt(df_pd3, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='year', value_name='yhteensa')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
-					"df_melted_spark3 = spark.createDataFrame(df_melted3)\n",
-					"display(df_melted_spark3)"
+					"#df_melted_spark3 = spark.createDataFrame(df_melted3)\n",
+					"#display(df_melted_spark3)"
 				],
 				"execution_count": null
 			},
@@ -213,7 +213,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": null
+				"execution_count": 163
 			},
 			{
 				"cell_type": "code",
@@ -221,15 +221,15 @@
 					"collapsed": false
 				},
 				"source": [
-					"import pandas as pd\n",
+					"import pyspark.pandas as pd\n",
 					"\n",
 					"df_pd4 = df4.toPandas()\n",
 					"df_melted4 = pd.melt(df_pd4, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='year', value_name='yhteensa')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
-					"df_melted_spark4 = spark.createDataFrame(df_melted4)\n",
-					"display(df_melted_spark4)"
+					"#df_melted_spark4 = spark.createDataFrame(df_melted4)\n",
+					"#display(df_melted_spark4)"
 				],
-				"execution_count": null
+				"execution_count": 164
 			}
 		]
 	}
