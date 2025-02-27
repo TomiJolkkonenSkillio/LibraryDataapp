@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b5b6ceaa-fcf1-492e-9bb6-9a675ad032ea"
+				"spark.autotune.trackingId": "8973fa5c-38c6-43eb-9013-9ca55f44e513"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": null
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -79,7 +79,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": null
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -106,16 +106,18 @@
 					"# Order by 'kunta' first, then 'id'\n",
 					"df_combined_ids = df_combined_ids.orderBy(F.col(\"id\"), F.col(\"vuosi\"))\n",
 					"\n",
+					"\n",
 					"display(df_combined_ids)"
 				],
-				"execution_count": null
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
 				"source": [
+					"import com.microsoft.spark.sqlanalytics\n",
 					"df_combined_ids.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_municipality\")"
 				],
-				"execution_count": null
+				"execution_count": 36
 			}
 		]
 	}
