@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c674f574-d5a8-48df-93d1-e6b2ec93b7a2"
+				"spark.autotune.trackingId": "077f5ba7-8aea-4e03-94e3-0013a8a4f91d"
 			}
 		},
 		"metadata": {
@@ -57,6 +57,7 @@
 					"from pyspark.sql import functions as F\n",
 					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType\n",
 					"import com.microsoft.spark.sqlanalytics\n",
+					"from pyspark.sql.window import Window\n",
 					"\n",
 					"\n",
 					"df = spark.read.format(\"com.crealytics.spark.excel\") \\\n",
@@ -75,6 +76,7 @@
 					"del column_names\n",
 					"\n",
 					"df_dim_category = spark.createDataFrame([(item,) for item in unique_columns], [\"kategoria_nimi\"])\n",
+					"print(unique_columns)\n",
 					"del unique_columns\n",
 					"\n",
 					"df_dim_category = df_dim_category.withColumn(\"kategoria_alkaen\", \n",
@@ -91,10 +93,16 @@
 					"                F.when(F.col(\"kategoria_nimi\").contains(\" (\"),\n",
 					"                F.split(F.col(\"kategoria_nimi\"), \" \\(\", -1)[0]).otherwise(F.col(\"kategoria_nimi\"))\n",
 					"                )\n",
+					"df_dim_category = df_dim_category.withColumn(\n",
+					"    \"kategoria_id\", \n",
+					"    F.row_number().over(Window.orderBy(F.monotonically_increasing_id()))\n",
+					")\n",
+					"\n",
+					"df_dim_category = df_dim_category.select([\"kategoria_id\", \"kategoria_nimi\", \"kategoria_alkaen\", \"kategoria_paattyen\"])\n",
 					"\n",
 					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
 				],
-				"execution_count": 34
+				"execution_count": 38
 			}
 		]
 	}
