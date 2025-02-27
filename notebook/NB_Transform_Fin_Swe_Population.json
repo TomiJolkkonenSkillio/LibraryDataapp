@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "be531e5a-4bfe-41e2-8127-bde3eae2cace"
+				"spark.autotune.trackingId": "68b62540-6980-4c08-bcc0-19e985d57a9a"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 1
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -88,7 +88,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 2
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -109,18 +109,19 @@
 					"# Display the distinct values\n",
 					"print(distinct_vuosi_values)"
 				],
-				"execution_count": 3
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"from pyspark.sql import functions as F\n",
 					"\n",
-					"df = df.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Koski TI\", \"Koski\"))\n",
-					"df.select(\"kunta\").distinct().show()\n",
+					"\n",
+					"df = df.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Koski Tl\", \"Koski\"))\n",
+					"df.filter(F.col(\"kunta\") == \"Koski\").show()\n",
 					""
 				],
-				"execution_count": 4
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +134,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 5
+				"execution_count": 21
 			}
 		]
 	}
