@@ -19,14 +19,25 @@
 						"referenceName": "createfactlibrarytable",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "group2-synapse-etl-workspace-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "staging"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
 				}
 			}
 		],
+		"folder": {
+			"name": "gold"
+		},
 		"annotations": []
 	}
 }

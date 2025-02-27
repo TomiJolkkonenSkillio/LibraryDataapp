@@ -707,7 +707,7 @@
 				"     skipDuplicateMapOutputs: true) ~> removeduplicatecolumnsandrenamecolumns",
 				"removeduplicatecolumnsandrenamecolumns derive(kunta = split(kunta_vuosi, ',')[1],",
 				"          vuosi = toInteger(split(kunta_vuosi, ', ')[size(split(kunta_vuosi, ', '))])) ~> splitkuntaandvuosi",
-				"splitkuntaandvuosi derive(kunta = split(kunta, \" \")[1]) ~> removekuntaliitos",
+				"splitkuntaandvuosi derive(kunta = split(kunta, \" /\")[1]) ~> removekuntaliitos",
 				"removekuntaliitos select(mapColumn(",
 				"          kunta,",
 				"          vuosi,",
