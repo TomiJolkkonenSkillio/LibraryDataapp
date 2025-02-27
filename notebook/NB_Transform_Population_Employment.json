@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "123718ef-6538-4f68-9330-ba8b224122e3"
+				"spark.autotune.trackingId": "2113e7e3-3469-4768-ab9c-24e873eb29b7"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"\n",
 					"#display(df1)"
 				],
-				"execution_count": 79
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -80,13 +80,13 @@
 					"import re\n",
 					"from pyspark.sql.functions import lit\n",
 					"\n",
-					"df1 = df1.withColumnRenamed(\"2014\", \"yhteensa\")\n",
+					"df1 = df1.withColumnRenamed(\"2014\", \"luku\")\n",
 					"\n",
 					"df1 = df1.withColumn(\"vuosi\", lit(2014))\n",
 					"df1=df1.toPandas()\n",
 					"#display(df1)"
 				],
-				"execution_count": 80
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"\n",
 					"#display(df2)"
 				],
-				"execution_count": 81
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -120,12 +120,12 @@
 					"import pandas as pd\n",
 					"\n",
 					"df_pd2 = df2.toPandas()\n",
-					"df_melted2 = pd.melt(df_pd2, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='yhteensa')\n",
+					"df_melted2 = pd.melt(df_pd2, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='luku')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
 					"#df_melted_spark2 = spark.createDataFrame(df_melted2)\n",
 					"#display(df_melted_spark2)"
 				],
-				"execution_count": 82
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -137,7 +137,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 83
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -160,7 +160,7 @@
 					"\n",
 					"#display(df3)"
 				],
-				"execution_count": 84
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -171,12 +171,12 @@
 					"import pandas as pd\n",
 					"\n",
 					"df_pd3 = df3.toPandas()\n",
-					"df_melted3 = pd.melt(df_pd3, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='yhteensa')\n",
+					"df_melted3 = pd.melt(df_pd3, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='luku')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
 					"#df_melted_spark3 = spark.createDataFrame(df_melted3)\n",
 					"#display(df_melted_spark3)"
 				],
-				"execution_count": 85
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -188,7 +188,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 86
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"\n",
 					"#display(df4)"
 				],
-				"execution_count": 87
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -222,12 +222,12 @@
 					"import pandas as pd\n",
 					"\n",
 					"df_pd4 = df4.toPandas()\n",
-					"df_melted4 = pd.melt(df_pd4, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='yhteensa')\n",
+					"df_melted4 = pd.melt(df_pd4, id_vars=['Alue', 'Pääasiallinen toiminta'], var_name='vuosi', value_name='luku')\n",
 					"# Convert Pandas DataFrame back to PySpark DataFrame\n",
 					"#df_melted_spark4 = spark.createDataFrame(df_melted4)\n",
 					"#display(df_melted_spark4)"
 				],
-				"execution_count": 88
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -248,7 +248,7 @@
 					"spark_df.printSchema()\n",
 					"\n",
 					"# Convert 'yhteensa' to int (from long)\n",
-					"spark_df = spark_df.withColumn('yhteensa', col('yhteensa').cast('int'))\n",
+					"spark_df = spark_df.withColumn('luku', col('luku').cast('int'))\n",
 					"\n",
 					"# Convert 'vuosi' to int (from string)\n",
 					"spark_df = spark_df.withColumn('vuosi', col('vuosi').cast('int'))\n",
@@ -265,9 +265,139 @@
 					"# Display the distinct values\n",
 					"print(distinct_vuosi_values)\n",
 					"\n",
-					"#display(spark_df)"
+					"spark_df = spark_df.withColumnRenamed(\"Alue\", \"kunta\")\n",
+					"spark_df = spark_df.withColumnRenamed(\"Pääasiallinen toiminta\", \"joukko\")\n",
+					"\n",
+					"display(spark_df)"
 				],
-				"execution_count": 95
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"spark_df = spark_df.filter(spark_df.kunta != \"KOKO MAA\")\n",
+					"display(spark_df)"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"df_pivoted = spark_df.groupBy(\"kunta\", \"vuosi\").pivot(\"joukko\").agg(F.first(\"luku\"))\n",
+					"\n",
+					"# Order the DataFrame alphabetically by 'kunta'\n",
+					"df_pivoted_ordered = df_pivoted.orderBy(\"kunta\", \"vuosi\")\n",
+					"\n",
+					"# Display the result\n",
+					"display(df_pivoted_ordered)"
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Eläkeläiset\", \"elakelaiset\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Muut työvoiman ulkopuolella olevat\", \"muut_tyovoiman_ulkopuolella_olevat\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Opiskelijat, koululaiset\", \"opiskelijat\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Työlliset\", \"tyolliset\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Työttömät\", \"tyottomat\")\n",
+					"\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Työvoima\", \"tyovoima\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Työvoiman ulkopuolella olevat\", \"tyovoiman_ulkopuolella_olevat\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Varusmiehet, siviilipalvelusmiehet\", \"varsiviilimiehet\")\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumnRenamed(\"Yhteensä\", \"vakiluku\")\n",
+					"\n",
+					"display(df_pivoted_ordered)\n",
+					""
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"for column in df_pivoted_ordered.columns:\n",
+					"    print(column)"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# List of column names\n",
+					"columns = [\n",
+					"    \"kunta\",\n",
+					"    \"vuosi\",\n",
+					"    \"0-14 -vuotiaat\", \n",
+					"    \"elakelaiset\", \n",
+					"    \"muut_tyovoiman_ulkopuolella_olevat\", \n",
+					"    \"opiskelijat\", \n",
+					"    \"tyolliset\", \n",
+					"    \"tyottomat\", \n",
+					"    \"tyovoima\", \n",
+					"    \"tyovoiman_ulkopuolella_olevat\", \n",
+					"    \"varsiviilimiehet\", \n",
+					"    \"vakiluku\"\n",
+					"]\n",
+					"\n",
+					"# Loop through each column and count the number of null values\n",
+					"null_counts = {}\n",
+					"for column in columns:\n",
+					"    null_count = df_pivoted_ordered.filter(F.col(column).isNull()).count()\n",
+					"    null_counts[column] = null_count\n",
+					"\n",
+					"# Display the results\n",
+					"for column, count in null_counts.items():\n",
+					"    print(f\"Number of null values in '{column}': {count}\")"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Koski Tl\", \"Koski\"))\n",
+					"df_pivoted_ordered = df_pivoted_ordered.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Pedersören kunta\", \"Pedersören\"))\n",
+					"df_pivoted_ordered.filter(F.col(\"kunta\") == \"Koski\").show()\n",
+					"df_pivoted_ordered.filter(F.col(\"kunta\") == \"Pedersören\").show()\n",
+					""
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Check the schema after the changes\n",
+					"df_pivoted_ordered.printSchema()"
+				],
+				"execution_count": 38
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Define output path\n",
+					"output_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/population_data.parquet\"\n",
+					"\n",
+					"# Save DataFrame as Parquet\n",
+					"df_pivoted_ordered.write.mode(\"overwrite\").parquet(output_path)\n",
+					"\n",
+					"print(\"Data successfully saved to ADLS in Parquet format.\")"
+				],
+				"execution_count": 39
 			}
 		]
 	}
