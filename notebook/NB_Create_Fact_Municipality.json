@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ca521b4a-700d-478c-95b6-a19e3f31d391"
+				"spark.autotune.trackingId": "51216a37-4a30-4d53-9703-97a9de32f89a"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": 21
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -79,7 +79,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": 22
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -92,7 +92,7 @@
 					"\n",
 					"print(f\"Distinct count of kunta: {df_ids_kunta}\")"
 				],
-				"execution_count": 23
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -125,7 +125,7 @@
 					"\n",
 					"display(df_combined_ids)"
 				],
-				"execution_count": 24
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +133,7 @@
 					"import com.microsoft.spark.sqlanalytics\n",
 					"df_combined_ids.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_municipality\")"
 				],
-				"execution_count": 26
+				"execution_count": 31
 			}
 		]
 	}
