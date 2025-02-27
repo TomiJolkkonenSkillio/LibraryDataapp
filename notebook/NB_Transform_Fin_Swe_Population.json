@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f2fe8c0e-a357-46a6-a160-7ab88c92d6c2"
+				"spark.autotune.trackingId": "be531e5a-4bfe-41e2-8127-bde3eae2cace"
 			}
 		},
 		"metadata": {
@@ -114,6 +114,17 @@
 			{
 				"cell_type": "code",
 				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"df = df.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Koski TI\", \"Koski\"))\n",
+					"df.select(\"kunta\").distinct().show()\n",
+					""
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
 					"# Define output path\n",
 					"output_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet\"\n",
 					"\n",
@@ -122,7 +133,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			}
 		]
 	}
