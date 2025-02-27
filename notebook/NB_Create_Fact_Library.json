@@ -1,0 +1,156 @@
+{
+	"name": "NB_Create_Fact_Library",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "group2sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "56a77b29-9210-4aaf-8594-704e92e6cc40"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/23b183d5-a30f-46b8-b418-ad060fb67787/resourceGroups/Group2SynapseETLProject/providers/Microsoft.Synapse/workspaces/group2-synapse-etl-workspace/bigDataPools/group2sparkpool",
+				"name": "group2sparkpool",
+				"type": "Spark",
+				"endpoint": "https://group2-synapse-etl-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/group2sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"categories = spark.read.synapsesql(\"group2sqlpool.library.dim_categories\")\n",
+					"cats_as_list = [x.kategoria_nimi for x in categories.select(\"kategoria_nimi\").collect()]\n",
+					"print(cats_as_list)\n",
+					"\n",
+					"\n",
+					"cols = df = spark.read.parquet(\"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\").columns\n",
+					"print(cols)\n",
+					"\n",
+					"\n",
+					"mappaus = {\n",
+					"    \"Suomenkieliset kirjat\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Ruotsinkieliset kirjat\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Muunkieliset kirjat\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Kaunokirjat, aikuiset\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Kaunokirjat, lapset\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Tietokirjat, aikuiset\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Tietokirjat, lapset\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Nuotit ja partituurit\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Musiikkiäänitteet\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Muut äänitteet\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Videotallenteet\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Muut aineistot\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Videot\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Cd-rom-levyt\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Celian äänikirjat cd-levyina\": \"kokoelmat_suomenkieliset_kirjat\",\n",
+					"    \"Dvd ja blu-ray-levyt\": \"kokoelmat_suomenkieliset_kirjat\"\n",
+					"}"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType\n",
+					"import com.microsoft.spark.sqlanalytics\n",
+					"\n",
+					"\n",
+					"df = spark.read.parquet(\"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\")\n",
+					"df_categories = spark.read.synapsesql(\"group2sqlpool.library.dim_categories\")\n",
+					"\n",
+					"mapping = {\n",
+					"    \"Suomenkieliset kirjat\": [\"kokoelmat_suomenkieliset_kirjat\", \"lainaus_suomenkieliset_kirjat\"],\n",
+					"    \"Ruotsinkieliset kirjat\": [\"kokoelmat_ruotsinkieliset_kirjat\", \"lainaus_ruotsinkieliset_kirjat\"],\n",
+					"    \"Muunkieliset kirjat\": [\"kokoelmat_muunkieliset_kirjat\", \"lainaus_muunkieliset_kirjat\"],\n",
+					"    \"Kaunokirjat, aikuiset\": [\"kokoelmat_kaunokirjat_aikuiset\", \"lainaus_kaunokirjat_aikuiset\"],\n",
+					"    \"Kaunokirjat, lapset\": [\"kokoelmat_kaunokirjat_lapset\", \"lainaus_kaunokirjat_lapset\"],\n",
+					"    \"Tietokirjat, aikuiset\": [\"kokoelmat_tietokirjat_aikuiset\", \"lainaus_tietokirjat_aikuiset\"],\n",
+					"    \"Tietokirjat, lapset\": [\"kokoelmat_tietokirjat_lapset\", \"lainaus_tietokirjat_lapset\"],\n",
+					"    \"Nuotit ja partituurit\": [\"kokoelmat_nuotit_ja_partituurit\", \"lainaus_nuotit_ja_partituurit\"],\n",
+					"    \"Musiikkiäänitteet\": [\"kokoelmat_musiikkiaanitteet\", \"lainaus_musiikkiaanitteet\"],\n",
+					"    \"Muut äänitteet\": [\"kokoelmat_musiikkiaanitteet\", \"lainaus_musiikkiaanitteet\"],\n",
+					"    \"Videotallenteet\": [\"kokoelmat_videotallenteet\", \"lainaus_videotallenteet\"],\n",
+					"    \"Muut aineistot\": [\"kokoelmat_muut_aineistot\", \"lainaus_muut_aineistot\"],\n",
+					"    \"Videot\": [\"kokoelmat_videot\", \"lainaus_videot\"],\n",
+					"    \"Cd-rom-levyt\": [\"kokoelmat_cd_rom_levyt\", \"lainaus_cd_rom_levyt\"],\n",
+					"    \"Celian äänikirjat cd-levyina\": [\"lainaus_celian_aanikirjat_cd_levyina\"],\n",
+					"    \"Dvd ja blu-ray-levyt\": [\"kokoelmat_dvd_ja_blue_ray_levyt\", \"lainaus_dvd_ja_blue_ray_levyt\"]\n",
+					"}\n",
+					"print(df.columns)\n",
+					"print(df_categories)\n",
+					"display(df)\n",
+					"\n",
+					"\n",
+					"return\n",
+					"column_names = [name for name in column_names if name.startswith(\"Kokoelmat: \") or name.startswith(\"Lainaus: \")]\n",
+					"column_names = [name.replace(\"Lainaus: \", \"\").replace(\"Kokoelmat: \", \"\").replace(\"_\", \" \") for name in column_names]\n",
+					"column_names = [name.capitalize() for name in column_names]\n",
+					"unique_columns = []\n",
+					"[unique_columns.append(name) for name in column_names if name not in unique_columns and name != \"Kirjat yhteensä\" and name != \"Dvd ja blue-ray -levyt (-2017)\"]\n",
+					"del column_names\n",
+					"\n",
+					"df_dim_category = spark.createDataFrame([(item,) for item in unique_columns], [\"kategoria_nimi\"])\n",
+					"del unique_columns\n",
+					"\n",
+					"df_dim_category = df_dim_category.withColumn(\"kategoria_alkaen\", \n",
+					"                F.when(F.col(\"kategoria_nimi\").contains(\"-)\"), \n",
+					"                F.regexp_extract(F.col(\"kategoria_nimi\"), r\"\\((\\d+)-\\)\", 1)\n",
+					"                ).otherwise(None))\n",
+					"\n",
+					"df_dim_category = df_dim_category.withColumn(\"kategoria_paattyen\", \n",
+					"                F.when(F.col(\"kategoria_nimi\").contains(\"(-\"), \n",
+					"                F.regexp_extract(F.col(\"kategoria_nimi\"), r\"\\(-(\\d+)\\)\", 1)\n",
+					"                ).otherwise(None))\n",
+					"\n",
+					"df_dim_category = df_dim_category.withColumn(\"kategoria_nimi\",\n",
+					"                F.when(F.col(\"kategoria_nimi\").contains(\" (\"),\n",
+					"                F.split(F.col(\"kategoria_nimi\"), \" \\(\", -1)[0]).otherwise(F.col(\"kategoria_nimi\"))\n",
+					"                )\n",
+					"\n",
+					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
+				],
+				"execution_count": 4
+			}
+		]
+	}
+}
