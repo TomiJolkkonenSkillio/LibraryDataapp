@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fc3aa973-6121-42cc-8f92-0e6b15a27652"
+				"spark.autotune.trackingId": "4471e19c-5457-4df0-844d-b6f942d2df7b"
 			}
 		},
 		"metadata": {
@@ -112,7 +112,12 @@
 					"del pivot_expression_loans\n",
 					"del pivot_n_collections\n",
 					"del pivot_n_loans\n",
+					"reverse_mapping = {val: key for key, values in mapping.items() for val in values}\n",
+					"print(reverse_mapping)\n",
+					"mapping_expression = F.create_map([F.lit(x) for pair in reverse_mapping.items() for x in pair])\n",
 					"\n",
+					"df_updated = df_pivoted_collection.withColumn(\"new\", mapping_expression.getItem(F.col(\"kategoria_id\")))\n",
+					"display(df_updated)\n",
 					"\n",
 					"return\n",
 					"df_categories = spark.read.synapsesql(\"group2sqlpool.library.dim_categories\")\n",
@@ -120,35 +125,11 @@
 					"\n",
 					"#df_pivoted = df_pivoted.join(df_categories, on=df_pivoted[\"kategoria_id\"] == df_categories[])\n",
 					"\n",
-					"return\n",
-					"column_names = [name for name in column_names if name.startswith(\"Kokoelmat: \") or name.startswith(\"Lainaus: \")]\n",
-					"column_names = [name.replace(\"Lainaus: \", \"\").replace(\"Kokoelmat: \", \"\").replace(\"_\", \" \") for name in column_names]\n",
-					"column_names = [name.capitalize() for name in column_names]\n",
-					"unique_columns = []\n",
-					"[unique_columns.append(name) for name in column_names if name not in unique_columns and name != \"Kirjat yhteensä\" and name != \"Dvd ja blue-ray -levyt (-2017)\"]\n",
-					"del column_names\n",
 					"\n",
-					"df_dim_category = spark.createDataFrame([(item,) for item in unique_columns], [\"kategoria_nimi\"])\n",
-					"del unique_columns\n",
-					"\n",
-					"df_dim_category = df_dim_category.withColumn(\"kategoria_alkaen\", \n",
-					"                F.when(F.col(\"kategoria_nimi\").contains(\"-)\"), \n",
-					"                F.regexp_extract(F.col(\"kategoria_nimi\"), r\"\\((\\d+)-\\)\", 1)\n",
-					"                ).otherwise(None))\n",
-					"\n",
-					"df_dim_category = df_dim_category.withColumn(\"kategoria_paattyen\", \n",
-					"                F.when(F.col(\"kategoria_nimi\").contains(\"(-\"), \n",
-					"                F.regexp_extract(F.col(\"kategoria_nimi\"), r\"\\(-(\\d+)\\)\", 1)\n",
-					"                ).otherwise(None))\n",
-					"\n",
-					"df_dim_category = df_dim_category.withColumn(\"kategoria_nimi\",\n",
-					"                F.when(F.col(\"kategoria_nimi\").contains(\" (\"),\n",
-					"                F.split(F.col(\"kategoria_nimi\"), \" \\(\", -1)[0]).otherwise(F.col(\"kategoria_nimi\"))\n",
-					"                )\n",
 					"\n",
 					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
 				],
-				"execution_count": 11
+				"execution_count": 19
 			}
 		]
 	}
