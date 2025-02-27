@@ -2,7 +2,7 @@
 	"name": "SQL script 6",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (100) [fakta_id]\n,[kunta_id]\n,[Vuosi]\n,[kategoria]\n,[kokoelma_maara]\n,[lainaus_maara]\n FROM [library].[fact_library]\n order by [fakta_id];",
+			"query": "DROP TABLE [library].[fact_municipality]\nGO\n\n",
 			"metadata": {
 				"language": "sql"
 			},

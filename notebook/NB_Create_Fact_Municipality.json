@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0800cd46-4403-46a2-94ca-a0ac936f6b5d"
+				"spark.autotune.trackingId": "ca521b4a-700d-478c-95b6-a19e3f31d391"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": 16
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -74,25 +74,25 @@
 					"    if column.lower() not in [\"kunta\", \"nimi\"]:\n",
 					"        df_ids = df_ids.drop(column)\n",
 					"\n",
-					"df_ids = df_ids.withColumnRenamed(\"kunta\", \"id\")\n",
+					"df_ids = df_ids.withColumnRenamed(\"kunta\", \"kunta_id\")\n",
 					"df_ids = df_ids.withColumnRenamed(\"nimi\", \"kunta\")\n",
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": 17
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"# Assuming df_combined is your DataFrame\n",
-					"df_ids_id = df_ids.select(\"id\").distinct().count()\n",
+					"df_ids_id = df_ids.select(\"kunta_id\").distinct().count()\n",
 					"df_ids_kunta = df_ids.select(\"kunta\").distinct().count()\n",
 					"\n",
 					"print(f\"Distinct count of id: {df_ids_id}\")\n",
 					"\n",
 					"print(f\"Distinct count of kunta: {df_ids_kunta}\")"
 				],
-				"execution_count": 18
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -106,10 +106,10 @@
 					"df_combined_ids = df_combined.join(df_ids, on=[\"kunta\"], how=\"outer\")\n",
 					"\n",
 					"# Reorder columns so that 'id' comes first\n",
-					"df_combined_ids = df_combined_ids.select(\"id\", *[col for col in df_combined_ids.columns if col != \"id\"])\n",
+					"df_combined_ids = df_combined_ids.select(\"kunta_id\", *[col for col in df_combined_ids.columns if col != \"kunta_id\"])\n",
 					"\n",
 					"#Filter out rows where 'id' is null or undefined\n",
-					"df_combined_ids = df_combined_ids.filter(F.col(\"id\").isNotNull())\n",
+					"df_combined_ids = df_combined_ids.filter(F.col(\"kunta_id\").isNotNull())\n",
 					"\n",
 					"# Assuming df_combined is your DataFrame\n",
 					"distinct_kunta_count = df_combined_ids.select(\"kunta\").distinct().count()\n",
@@ -120,12 +120,12 @@
 					"df_combined_ids = df_combined_ids.drop(\"kunta\")\n",
 					"\n",
 					"# Order by 'kunta' first, then 'id'\n",
-					"df_combined_ids = df_combined_ids.orderBy(F.col(\"id\"), F.col(\"vuosi\"))\n",
+					"df_combined_ids = df_combined_ids.orderBy(F.col(\"kunta_id\"), F.col(\"vuosi\"))\n",
 					"\n",
 					"\n",
 					"display(df_combined_ids)"
 				],
-				"execution_count": 19
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +133,7 @@
 					"import com.microsoft.spark.sqlanalytics\n",
 					"df_combined_ids.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_municipality\")"
 				],
-				"execution_count": 20
+				"execution_count": 26
 			}
 		]
 	}
