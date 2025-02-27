@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "de0bf5f3-c1f5-4412-a677-276d77a34383"
+				"spark.autotune.trackingId": "eaf23f48-1cee-4d64-b224-bdb2cd6966f4"
 			}
 		},
 		"metadata": {
@@ -112,9 +112,7 @@
 					"\n",
 					"#Rename columns in both data frames\n",
 					"df_pivoted_collection = df_pivoted_collection.withColumnRenamed(\"maara\", \"kokoelma_maara\")\n",
-					"print(df_pivoted_collection.count())\n",
 					"df_pivoted_loans = df_pivoted_loans.withColumnRenamed(\"maara\", \"lainaus_maara\")\n",
-					"print(df_pivoted_loans.count())\n",
 					"\n",
 					"#Create reverse mapping from the original mapping\n",
 					"reverse_mapping = {val: key for key, values in mapping.items() for val in values}\n",
