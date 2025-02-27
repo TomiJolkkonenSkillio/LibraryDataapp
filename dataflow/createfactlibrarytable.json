@@ -33,7 +33,15 @@
 					"name": "dimcategoriesgold"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sinktofactlibrary"
+				}
+			],
 			"transformations": [
 				{
 					"name": "selectkokoelmat"
@@ -290,7 +298,20 @@
 				"          lainaus_maara = lainaus",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2"
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2",
+				"selectonlyrelevantcolumns2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinktofactlibrary"
 			]
 		}
 	}
