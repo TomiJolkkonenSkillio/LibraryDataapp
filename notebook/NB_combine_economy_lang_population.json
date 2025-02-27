@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e01c7daf-21d0-42e9-a586-d2ebe87892f7"
+				"spark.autotune.trackingId": "d457d0bc-35dd-4e93-aba6-c4b563222c5d"
 			}
 		},
 		"metadata": {
@@ -57,14 +57,12 @@
 					"\n",
 					"df_economy = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/economy/\", header=True, inferSchema=True)\n",
 					"df_lang = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet/\")\n",
-					"#df_population = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/population_data.parquet\")\n",
+					"df_population = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/population_data.parquet\")\n",
 					"\n",
-					"display(df_economy)\n",
-					"display(df_lang)\n",
-					"\n",
-					""
+					"#display(df_economy)\n",
+					"#display(df_lang)"
 				],
-				"execution_count": 15
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -95,7 +93,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 16
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +118,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 17
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -128,12 +126,13 @@
 					"collapsed": false
 				},
 				"source": [
-					"df_combined = df_economy.join(df_lang, on=[\"kunta\", \"vuosi\"], how=\"outer\")\n",
-					"display(df_combined)\n",
-					"for column in df_combined.columns:\n",
+					"df_combined = df_economy.join(df_lang, on=[\"kunta\", \"vuosi\"], how=\"left\")\n",
+					"df_all_combined=df_combined.join(df_population, on=[\"kunta\", \"vuosi\"], how=\"left\")\n",
+					"display(df_all_combined)\n",
+					"for column in df_all_combined.columns:\n",
 					"    print(column)"
 				],
-				"execution_count": 18
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -159,53 +158,27 @@
 					"# Loop through each column and count the number of null values\n",
 					"null_counts = {}\n",
 					"for column in columns:\n",
-					"    null_count = df_combined.filter(F.col(column).isNull()).count()\n",
+					"    null_count = df_all_combined.filter(F.col(column).isNull()).count()\n",
 					"    null_counts[column] = null_count\n",
 					"\n",
 					"# Display the results\n",
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 19
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"collapsed": false
-				},
-				"source": [
-					"from pyspark.sql import functions as F\n",
-					"\n",
-					"# Filter rows where 'suomenkielinen_vaesto' is null\n",
-					"null_rows = df_combined.filter(F.col(\"suomenkielinen_vaesto\").isNull())\n",
-					"\n",
-					"# Display the result\n",
-					"display(null_rows)"
-				],
-				"execution_count": 20
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"collapsed": false
-				},
-				"source": [
-					"from pyspark.sql import functions as F\n",
-					"\n",
-					"# Filter rows where 'suomenkielinen_vaesto' is null\n",
-					"null_rows = df_combined.filter(F.col(\"toimintakulut_tilastovuonna\").isNull())\n",
-					"\n",
-					"# Display the result\n",
-					"display(null_rows)"
-				],
-				"execution_count": 21
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					""
+					"# Define output path\n",
+					"output_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/combined/combined_data.parquet\"\n",
+					"\n",
+					"# Save DataFrame as Parquet\n",
+					"df_all_combined.write.mode(\"overwrite\").parquet(output_path)\n",
+					"\n",
+					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": null
+				"execution_count": 48
 			}
 		]
 	}
