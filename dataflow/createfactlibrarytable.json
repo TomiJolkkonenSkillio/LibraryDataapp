@@ -112,14 +112,13 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 unpivot(output(",
-				"          lainaus as integer,",
-				"          kokoelmat_suomenkieliset_kirjat as integer,",
-				"          kokoelmat_ruotsinkieliset_kirjat as integer,",
-				"          kokoelmat_muunkieliset_kirjat as integer",
+				"          kategoria as string,",
+				"          kokoelmat as integer,",
+				"          lainaus as integer",
 				"     ),",
 				"     ungroupBy(kunta,",
 				"          vuosi),",
-				"     lateral: true,",
+				"     lateral: false,",
 				"     ignoreNullPivots: false) ~> unpivot1"
 			]
 		}
