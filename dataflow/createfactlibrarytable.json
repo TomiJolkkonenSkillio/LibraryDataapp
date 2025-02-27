@@ -23,14 +23,14 @@
 						"referenceName": "AzureSynapseAnalyticsdimmunicipalities",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "dimmunicipalitiesgold"
 				},
 				{
 					"dataset": {
 						"referenceName": "AzureSynapseAnalyticsdimcategories",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "dimcategoriesgold"
 				}
 			],
 			"sinks": [],
@@ -169,12 +169,12 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
-				"     staged: true) ~> source1",
+				"     staged: true) ~> dimmunicipalitiesgold",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
-				"     staged: true) ~> source2",
+				"     staged: true) ~> dimcategoriesgold",
 				"libraryparquet1 select(mapColumn(",
 				"          kunta,",
 				"          vuosi,",
