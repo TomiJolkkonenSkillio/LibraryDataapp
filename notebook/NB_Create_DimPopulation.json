@@ -1,0 +1,65 @@
+{
+	"name": "NB_Create_DimPopulation",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "group2sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "23fa2672-cb8c-4590-8b91-e5aa92b1fd66"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/23b183d5-a30f-46b8-b418-ad060fb67787/resourceGroups/Group2SynapseETLProject/providers/Microsoft.Synapse/workspaces/group2-synapse-etl-workspace/bigDataPools/group2sparkpool",
+				"name": "group2sparkpool",
+				"type": "Spark",
+				"endpoint": "https://group2-synapse-etl-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/group2sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"\n",
+					"df_ids = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/vaesto23.csv\", header=True, inferSchema=True)\n",
+					"df_combined = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/combined/combined_data.parquet/\")\n",
+					"\n",
+					"display(df_ids)\n",
+					"#display(df_lang)"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
