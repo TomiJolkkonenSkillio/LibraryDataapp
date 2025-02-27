@@ -67,9 +67,6 @@
 				},
 				{
 					"name": "selectonlyrelevantcolumns2"
-				},
-				{
-					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -293,9 +290,7 @@
 				"          lainaus_maara = lainaus",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2",
-				"selectonlyrelevantcolumns2 aggregate(groupBy(vuosi),",
-				"     distintc = countDistinct(kunta_id)) ~> aggregate1"
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2"
 			]
 		}
 	}
