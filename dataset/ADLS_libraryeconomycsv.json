@@ -13,7 +13,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "libraryeconomy.csv",
 				"folderPath": "silver/economy",
 				"fileSystem": "vaesto"
 			},
