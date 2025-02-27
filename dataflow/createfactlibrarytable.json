@@ -17,6 +17,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "libraryparquet2"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimmunicipalities",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimcategories",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [],
@@ -151,6 +165,16 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> libraryparquet2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> source1",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> source2",
 				"libraryparquet1 select(mapColumn(",
 				"          kunta,",
 				"          vuosi,",
