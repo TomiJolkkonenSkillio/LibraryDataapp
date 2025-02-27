@@ -1,0 +1,64 @@
+{
+	"name": "Levenshtein_FuzzyLogic",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "6c46314c-6ffe-4c0d-b9fb-6b41a9168554"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import SparkSession\n",
+					"from pyspark.sql.functions import col, levenshtein\n",
+					"\n",
+					"# Initialize Spark session (ensure Azure credentials are configured)\n",
+					"spark = SparkSession.builder.getOrCreate()\n",
+					"\n",
+					"# Define the ADLS Gen2 paths\n",
+					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\"\n",
+					"population_data_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/\"\n",
+					"\n",
+					"# Read the data from ADLS Gen2\n",
+					"df1 = spark.read.format(\"delta\").load(library_data_path).select(\"kunta\")\n",
+					"df2 = spark.read.format(\"delta\").load(population_data_path).select(\"kunta\")\n",
+					"\n",
+					"# Perform cross join and apply Levenshtein distance filter\n",
+					"threshold = 2  # Define similarity threshold\n",
+					"joined_df = df1.crossJoin(df2) \\\n",
+					"    .withColumn(\"levenshtein_distance\", levenshtein(col(\"df1.kunta\"), col(\"df2.kunta\"))) \\\n",
+					"    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
+					"    .select(col(\"df1.kunta\").alias(\"kunta_library\"), col(\"df2.kunta\").alias(\"kunta_population\"), \"levenshtein_distance\")\n",
+					"\n",
+					"# Show results\n",
+					"joined_df.show()\n",
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
