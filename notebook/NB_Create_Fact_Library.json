@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "33da6e6f-0768-410b-9f91-37eff9f00cd6"
+				"spark.autotune.trackingId": "de0bf5f3-c1f5-4412-a677-276d77a34383"
 			}
 		},
 		"metadata": {
@@ -133,7 +133,6 @@
 					"#Merging and selecting final data frames and columns\n",
 					"df_merged = df_pivoted_loans.join(df_pivoted_collection, on=[\"kunta\", \"vuosi\", \"kategoria\"], how=\"outer\")\n",
 					"df_merged = df_merged.select(\"Kunta\", \"Vuosi\", \"kategoria\", \"kokoelma_maara\", \"lainaus_maara\")\n",
-					"print(df_merged.count())\n",
 					"#Remove unnecessary references\n",
 					"del df_pivoted_collection\n",
 					"del df_pivoted_loans\n",
@@ -141,7 +140,6 @@
 					"#Create df_municipalities and merge it to df_merged\n",
 					"df_municipalities = spark.read.synapsesql(\"group2sqlpool.library.dim_municipalities\")\n",
 					"df_merged = df_merged.join(df_municipalities, on=\"kunta\", how=\"inner\")\n",
-					"print(df_merged.count())\n",
 					"#Remove unnecessary references\n",
 					"del df_municipalities\n",
 					"\n",
@@ -155,9 +153,9 @@
 					"df_merged = df_merged.select(\"fakta_id\", \"kunta_id\", \"Vuosi\", \"kategoria\", \"kokoelma_maara\", \"lainaus_maara\")\n",
 					"\n",
 					"#Save to dedicated pool\n",
-					"#df_merged.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_library\")"
+					"df_merged.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_library\")"
 				],
-				"execution_count": 49
+				"execution_count": 53
 			}
 		]
 	}
