@@ -38,6 +38,9 @@
 				},
 				{
 					"name": "renamingrowvaluestomatchcategories2"
+				},
+				{
+					"name": "joinlainauskokoelmat"
 				}
 			],
 			"scriptLines": [
@@ -205,7 +208,14 @@
 				"     lateral: false,",
 				"     ignoreNullPivots: false) ~> unpivotlainas",
 				"unpivotkokoelmat derive(kategoria = replace(kategoria, \"kokoelmat_\", \"\")) ~> renamingrowvaluestomatchcategories",
-				"unpivotlainas derive(kategoria = replace(kategoria, \"lainaus_\", \"\")) ~> renamingrowvaluestomatchcategories2"
+				"unpivotlainas derive(kategoria = replace(kategoria, \"lainaus_\", \"\")) ~> renamingrowvaluestomatchcategories2",
+				"renamingrowvaluestomatchcategories, renamingrowvaluestomatchcategories2 join(renamingrowvaluestomatchcategories@kategoria == renamingrowvaluestomatchcategories2@kategoria",
+				"     && unpivotkokoelmat@kunta == unpivotlainas@kunta",
+				"     && unpivotkokoelmat@vuosi == unpivotlainas@vuosi,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinlainauskokoelmat"
 			]
 		}
 	}
