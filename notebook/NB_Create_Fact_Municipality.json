@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5c79d645-9bb4-4120-b403-33b3dd3445ab"
+				"spark.autotune.trackingId": "0800cd46-4403-46a2-94ca-a0ac936f6b5d"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": 1
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -79,7 +79,7 @@
 					"\n",
 					"display(df_ids)"
 				],
-				"execution_count": 2
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -92,7 +92,7 @@
 					"\n",
 					"print(f\"Distinct count of kunta: {df_ids_kunta}\")"
 				],
-				"execution_count": 3
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -108,17 +108,16 @@
 					"# Reorder columns so that 'id' comes first\n",
 					"df_combined_ids = df_combined_ids.select(\"id\", *[col for col in df_combined_ids.columns if col != \"id\"])\n",
 					"\n",
+					"#Filter out rows where 'id' is null or undefined\n",
+					"df_combined_ids = df_combined_ids.filter(F.col(\"id\").isNotNull())\n",
+					"\n",
 					"# Assuming df_combined is your DataFrame\n",
 					"distinct_kunta_count = df_combined_ids.select(\"kunta\").distinct().count()\n",
 					"\n",
 					"print(f\"Distinct count of kunta: {distinct_kunta_count}\")\n",
 					"\n",
-					"\n",
-					"# Filter out rows where 'id' is null or undefined\n",
-					"#df_combined_ids = df_combined_ids.filter(F.col(\"id\").isNotNull())\n",
-					"\n",
 					"# Delete column \"kunta\"\n",
-					"#df_combined_ids = df_combined_ids.drop(\"kunta\")\n",
+					"df_combined_ids = df_combined_ids.drop(\"kunta\")\n",
 					"\n",
 					"# Order by 'kunta' first, then 'id'\n",
 					"df_combined_ids = df_combined_ids.orderBy(F.col(\"id\"), F.col(\"vuosi\"))\n",
@@ -126,7 +125,7 @@
 					"\n",
 					"display(df_combined_ids)"
 				],
-				"execution_count": 5
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +133,7 @@
 					"import com.microsoft.spark.sqlanalytics\n",
 					"df_combined_ids.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_municipality\")"
 				],
-				"execution_count": 36
+				"execution_count": 20
 			}
 		]
 	}
