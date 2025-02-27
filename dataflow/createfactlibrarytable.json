@@ -58,6 +58,15 @@
 				},
 				{
 					"name": "selectonlyrelevantcolumns"
+				},
+				{
+					"name": "joinkunnat"
+				},
+				{
+					"name": "joinkategoriat"
+				},
+				{
+					"name": "selectonlyrelevantcolumns2"
 				}
 			],
 			"scriptLines": [
@@ -165,12 +174,22 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> libraryparquet2",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          kunta_id as integer,",
+				"          kunta as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
 				"     staged: true) ~> dimmunicipalitiesgold",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          kategoria_id as integer,",
+				"          kategoria_nimi as string,",
+				"          kategoria_alkaen as string,",
+				"          kategoria_paattyen as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
@@ -251,7 +270,26 @@
 				"          lainaus",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns"
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns",
+				"selectonlyrelevantcolumns, dimmunicipalitiesgold join(selectonlyrelevantcolumns@kunta == dimmunicipalitiesgold@kunta,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinkunnat",
+				"joinkunnat, dimcategoriesgold join(kategoria == kategoria_nimi,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinkategoriat",
+				"joinkategoriat select(mapColumn(",
+				"          kunta_id,",
+				"          vuosi,",
+				"          kategoria_id,",
+				"          kokoelma_maara = kokoelmat,",
+				"          lainaus_maara = lainaus",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2"
 			]
 		}
 	}
