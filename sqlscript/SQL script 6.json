@@ -2,7 +2,7 @@
 	"name": "SQL script 6",
 	"properties": {
 		"content": {
-			"query": "DROP TABLE [library].[fact_municipality]\nGO\n\n",
+			"query": "select COUNT(*)\nfrom library.dim_municipalities;",
 			"metadata": {
 				"language": "sql"
 			},
