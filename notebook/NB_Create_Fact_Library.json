@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2e446e6f-1a04-41ca-bbc9-88f1ee186d6f"
+				"spark.autotune.trackingId": "62129a3f-cb3b-4f8b-a6ee-df72b7815296"
 			}
 		},
 		"metadata": {
@@ -90,17 +90,21 @@
 					"pivot_expression = pivot_expression[0:len(pivot_expression) - 2]\n",
 					"print(pivot_expression)\n",
 					"print(df.columns)\n",
-					"print(df_categories)\n",
 					"display(df)\n",
 					"\n",
 					"df_pivoted = df.selectExpr(\"Kunta\", \"Vuosi\", f\"stack({pivot_n}, {pivot_expression}) as (kategoria_id, maara)\")\n",
 					"del df\n",
 					"del pivot_expression\n",
 					"del pivot_n\n",
+					"df_pivoted = df_pivoted.withColumn(\"kategoria_id\",\n",
+					"                                    \n",
+					"                                    )\n",
 					"display(df_pivoted)\n",
 					"\n",
 					"df_categories = spark.read.synapsesql(\"group2sqlpool.library.dim_categories\")\n",
 					"display(df_categories)\n",
+					"\n",
+					"df_pivoted = df_pivoted.join(df_categories, on=df_pivoted[\"kategoria_id\"] == df_categories[])\n",
 					"\n",
 					"return\n",
 					"column_names = [name for name in column_names if name.startswith(\"Kokoelmat: \") or name.startswith(\"Lainaus: \")]\n",
@@ -130,7 +134,7 @@
 					"\n",
 					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
 				],
-				"execution_count": 16
+				"execution_count": 3
 			}
 		]
 	}
