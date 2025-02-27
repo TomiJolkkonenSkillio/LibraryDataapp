@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ad4c976b-7743-487c-8c33-2455f3284369"
+				"spark.autotune.trackingId": "bc63c441-736e-40f1-a778-55cc70c0c596"
 			}
 		},
 		"metadata": {
@@ -57,6 +57,7 @@
 					"from pyspark.sql import functions as F\n",
 					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType\n",
 					"import com.microsoft.spark.sqlanalytics\n",
+					"from pyspark.sql.window import Window\n",
 					"\n",
 					"#Read library parquet\n",
 					"df = spark.read.parquet(\"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\")\n",
@@ -135,10 +136,26 @@
 					"del df_pivoted_collection\n",
 					"del df_pivoted_loans\n",
 					"\n",
+					"#Create df_municipalities and merge it to df_merged\n",
+					"df_municipalities = spark.read.synapsesql(\"group2sqlpool.library.dim_municipalities\")\n",
+					"df_merged = df_merged.join(df_municipalities, on=\"kunta\")\n",
+					"\n",
+					"#Remove unnecessary references\n",
+					"del df_municipalities\n",
+					"\n",
+					"#Add indexing\n",
+					"df_merged = df_merged.withColumn(\n",
+					"    \"fakta_id\", \n",
+					"    F.row_number().over(Window.orderBy(F.monotonically_increasing_id()))\n",
+					")\n",
+					"\n",
+					"#Select columns for the final data frame\n",
+					"df_merged = df_merged.select(\"fakta_id\", \"kunta_id\", \"Vuosi\", \"kategoria\", \"kokoelma_maara\", \"lainaus_maara\")\n",
+					"\n",
 					"#Save to dedicated pool\n",
 					"df_merged.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_library\")"
 				],
-				"execution_count": 27
+				"execution_count": 38
 			}
 		]
 	}

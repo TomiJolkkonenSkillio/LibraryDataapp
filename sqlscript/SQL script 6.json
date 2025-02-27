@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 6",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [fakta_id]\n,[kunta_id]\n,[Vuosi]\n,[kategoria]\n,[kokoelma_maara]\n,[lainaus_maara]\n FROM [library].[fact_library]\n order by [fakta_id];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "group2sqlpool",
+				"poolName": "group2sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
