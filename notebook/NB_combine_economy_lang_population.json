@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3754c1f9-c4f6-4a97-a963-1941ae77f344"
+				"spark.autotune.trackingId": "f55ac951-56be-4296-9200-2e2025465665"
 			}
 		},
 		"metadata": {
@@ -64,7 +64,7 @@
 					"\n",
 					""
 				],
-				"execution_count": 1
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -95,7 +95,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 2
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 3
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +133,7 @@
 					"for column in df_combined.columns:\n",
 					"    print(column)"
 				],
-				"execution_count": 4
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -166,7 +166,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 5
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -182,7 +182,7 @@
 					"# Display the result\n",
 					"display(null_rows)"
 				],
-				"execution_count": 6
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -198,7 +198,7 @@
 					"# Display the result\n",
 					"display(null_rows)"
 				],
-				"execution_count": 7
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
