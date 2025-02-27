@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b094539b-dc74-4ffc-b156-f9093ba057c7"
+				"spark.autotune.trackingId": "3754c1f9-c4f6-4a97-a963-1941ae77f344"
 			}
 		},
 		"metadata": {
@@ -64,7 +64,7 @@
 					"\n",
 					""
 				],
-				"execution_count": 11
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -95,7 +95,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 12
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 13
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +133,7 @@
 					"for column in df_combined.columns:\n",
 					"    print(column)"
 				],
-				"execution_count": 14
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -166,7 +166,7 @@
 					"for column, count in null_counts.items():\n",
 					"    print(f\"Number of null values in '{column}': {count}\")"
 				],
-				"execution_count": 15
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -182,7 +182,30 @@
 					"# Display the result\n",
 					"display(null_rows)"
 				],
-				"execution_count": 18
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Filter rows where 'suomenkielinen_vaesto' is null\n",
+					"null_rows = df_combined.filter(F.col(\"toimintakulut_tilastovuonna\").isNull())\n",
+					"\n",
+					"# Display the result\n",
+					"display(null_rows)"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}
