@@ -43,7 +43,7 @@
 					"name": "joinlainauskokoelmat"
 				},
 				{
-					"name": "select1"
+					"name": "selectonlyrelevantcolumns"
 				}
 			],
 			"scriptLines": [
@@ -227,7 +227,7 @@
 				"          lainaus",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns"
 			]
 		}
 	}
