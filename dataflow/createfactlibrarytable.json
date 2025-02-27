@@ -67,6 +67,9 @@
 				},
 				{
 					"name": "selectonlyrelevantcolumns2"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -271,11 +274,12 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns",
-				"selectonlyrelevantcolumns, dimmunicipalitiesgold join(selectonlyrelevantcolumns@kunta == dimmunicipalitiesgold@kunta,",
+				"selectonlyrelevantcolumns, dimmunicipalitiesgold join(fuzzyCompare(selectonlyrelevantcolumns@kunta, dimmunicipalitiesgold@kunta, 80.00),",
 				"     joinType:'inner',",
-				"     matchType:'exact',",
+				"     matchType:'fuzzy',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> joinkunnat",
+				"     scoreColumn:'similarity_score',",
+				"     broadcast: 'off')~> joinkunnat",
 				"joinkunnat, dimcategoriesgold join(kategoria == kategoria_nimi,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
@@ -289,7 +293,9 @@
 				"          lainaus_maara = lainaus",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2"
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns2",
+				"selectonlyrelevantcolumns2 aggregate(groupBy(vuosi),",
+				"     distintc = countDistinct(kunta_id)) ~> aggregate1"
 			]
 		}
 	}
