@@ -17,6 +17,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "libraryparquet2"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimmunicipalities",
+						"type": "DatasetReference"
+					},
+					"name": "dimmunicipalitiesgold"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsdimcategories",
+						"type": "DatasetReference"
+					},
+					"name": "dimcategoriesgold"
 				}
 			],
 			"sinks": [],
@@ -38,6 +52,12 @@
 				},
 				{
 					"name": "renamingrowvaluestomatchcategories2"
+				},
+				{
+					"name": "joinlainauskokoelmat"
+				},
+				{
+					"name": "selectonlyrelevantcolumns"
 				}
 			],
 			"scriptLines": [
@@ -145,6 +165,16 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> libraryparquet2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> dimmunicipalitiesgold",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> dimcategoriesgold",
 				"libraryparquet1 select(mapColumn(",
 				"          kunta,",
 				"          vuosi,",
@@ -205,7 +235,23 @@
 				"     lateral: false,",
 				"     ignoreNullPivots: false) ~> unpivotlainas",
 				"unpivotkokoelmat derive(kategoria = replace(kategoria, \"kokoelmat_\", \"\")) ~> renamingrowvaluestomatchcategories",
-				"unpivotlainas derive(kategoria = replace(kategoria, \"lainaus_\", \"\")) ~> renamingrowvaluestomatchcategories2"
+				"unpivotlainas derive(kategoria = replace(kategoria, \"lainaus_\", \"\")) ~> renamingrowvaluestomatchcategories2",
+				"renamingrowvaluestomatchcategories, renamingrowvaluestomatchcategories2 join(unpivotkokoelmat@kunta == unpivotlainas@kunta",
+				"     && unpivotkokoelmat@vuosi == unpivotlainas@vuosi",
+				"     && renamingrowvaluestomatchcategories@kategoria == renamingrowvaluestomatchcategories2@kategoria,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinlainauskokoelmat",
+				"joinlainauskokoelmat select(mapColumn(",
+				"          kunta = unpivotlainas@kunta,",
+				"          vuosi = unpivotlainas@vuosi,",
+				"          kategoria = renamingrowvaluestomatchcategories2@kategoria,",
+				"          kokoelmat,",
+				"          lainaus",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectonlyrelevantcolumns"
 			]
 		}
 	}
