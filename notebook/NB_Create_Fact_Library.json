@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "56a77b29-9210-4aaf-8594-704e92e6cc40"
+				"spark.autotune.trackingId": "38d86d77-9757-4cdb-9d00-4a5e76649585"
 			}
 		},
 		"metadata": {
@@ -108,7 +108,7 @@
 					"    \"Tietokirjat, lapset\": [\"kokoelmat_tietokirjat_lapset\", \"lainaus_tietokirjat_lapset\"],\n",
 					"    \"Nuotit ja partituurit\": [\"kokoelmat_nuotit_ja_partituurit\", \"lainaus_nuotit_ja_partituurit\"],\n",
 					"    \"Musiikkiäänitteet\": [\"kokoelmat_musiikkiaanitteet\", \"lainaus_musiikkiaanitteet\"],\n",
-					"    \"Muut äänitteet\": [\"kokoelmat_musiikkiaanitteet\", \"lainaus_musiikkiaanitteet\"],\n",
+					"    \"Muut äänitteet\": [\"kokoelmat_muut_aanitteet\", \"lainaus_muut_aanitteet\"],\n",
 					"    \"Videotallenteet\": [\"kokoelmat_videotallenteet\", \"lainaus_videotallenteet\"],\n",
 					"    \"Muut aineistot\": [\"kokoelmat_muut_aineistot\", \"lainaus_muut_aineistot\"],\n",
 					"    \"Videot\": [\"kokoelmat_videot\", \"lainaus_videot\"],\n",
@@ -149,7 +149,7 @@
 					"\n",
 					"df_dim_category.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.dim_categories\")"
 				],
-				"execution_count": 4
+				"execution_count": 1
 			}
 		]
 	}
