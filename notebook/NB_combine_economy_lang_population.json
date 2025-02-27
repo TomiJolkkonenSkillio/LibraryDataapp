@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "387ff861-195d-4781-aa46-32e7f5bad2a6"
+				"spark.autotune.trackingId": "eb09cd78-773a-423b-8022-df7e6f4dd816"
 			}
 		},
 		"metadata": {
@@ -60,65 +60,10 @@
 					"df_population = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/population_data.parquet\")\n",
 					"\n",
 					"#display(df_economy)\n",
-					"#display(df_lang)"
+					"#display(df_lang)\n",
+					"#display(df_population)"
 				],
-				"execution_count": 43
-			},
-			{
-				"cell_type": "code",
-				"source": [
-					"from pyspark.sql import functions as F\n",
-					"\n",
-					"# List of new column names\n",
-					"columns = [\n",
-					"    \"kunta\", \n",
-					"    \"vuosi\", \n",
-					"    \"toimintakulut_tilastovuonna\", \n",
-					"    \"henkilostokulut\", \n",
-					"    \"kirjastoaineistokulut\", \n",
-					"    \"kirjojen_hankintakulut\", \n",
-					"    \"e_aineistokulut\", \n",
-					"    \"tilakustannukset\", \n",
-					"    \"muut_kulut\", \n",
-					"    \"toimintakulut_kuluvan_vuoden_talousarviossa\", \n",
-					"]\n",
-					"\n",
-					"# Loop through each column and count the number of null values\n",
-					"null_counts = {}\n",
-					"for column in columns:\n",
-					"    null_count = df_economy.filter(F.col(column).isNull()).count()\n",
-					"    null_counts[column] = null_count\n",
-					"\n",
-					"# Display the results\n",
-					"for column, count in null_counts.items():\n",
-					"    print(f\"Number of null values in '{column}': {count}\")"
-				],
-				"execution_count": 44
-			},
-			{
-				"cell_type": "code",
-				"source": [
-					"from pyspark.sql import functions as F\n",
-					"\n",
-					"# List of new column names\n",
-					"columns = [\n",
-					"    \"kunta\", \n",
-					"    \"vuosi\", \n",
-					"    \"suomenkielinen_vaesto\", \n",
-					"    \"ruotsinkielinen_vaesto\", \n",
-					"]\n",
-					"\n",
-					"# Loop through each column and count the number of null values\n",
-					"null_counts = {}\n",
-					"for column in columns:\n",
-					"    null_count = df_lang.filter(F.col(column).isNull()).count()\n",
-					"    null_counts[column] = null_count\n",
-					"\n",
-					"# Display the results\n",
-					"for column, count in null_counts.items():\n",
-					"    print(f\"Number of null values in '{column}': {count}\")"
-				],
-				"execution_count": 45
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -132,40 +77,21 @@
 					"for column in df_all_combined.columns:\n",
 					"    print(column)"
 				],
-				"execution_count": 46
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"from pyspark.sql import functions as F\n",
 					"\n",
-					"# List of new column names\n",
-					"columns = [\n",
-					"    \"kunta\", \n",
-					"    \"vuosi\", \n",
-					"    \"toimintakulut_tilastovuonna\", \n",
-					"    \"henkilostokulut\", \n",
-					"    \"kirjastoaineistokulut\", \n",
-					"    \"kirjojen_hankintakulut\", \n",
-					"    \"e_aineistokulut\", \n",
-					"    \"tilakustannukset\", \n",
-					"    \"muut_kulut\", \n",
-					"    \"toimintakulut_kuluvan_vuoden_talousarviossa\", \n",
-					"    \"suomenkielinen_vaesto\", \n",
-					"    \"ruotsinkielinen_vaesto\"\n",
-					"]\n",
 					"\n",
-					"# Loop through each column and count the number of null values\n",
-					"null_counts = {}\n",
-					"for column in columns:\n",
-					"    null_count = df_all_combined.filter(F.col(column).isNull()).count()\n",
-					"    null_counts[column] = null_count\n",
+					"# Assuming df_combined is your DataFrame\n",
+					"distinct_kunta_count = df_all_combined.select(\"kunta\").distinct().count()\n",
 					"\n",
-					"# Display the results\n",
-					"for column, count in null_counts.items():\n",
-					"    print(f\"Number of null values in '{column}': {count}\")"
+					"print(f\"Distinct count of kunta: {distinct_kunta_count}\")\n",
+					"\n",
+					""
 				],
-				"execution_count": 47
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -178,7 +104,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 48
+				"execution_count": 6
 			}
 		]
 	}
