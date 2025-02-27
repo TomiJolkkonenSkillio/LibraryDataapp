@@ -1,0 +1,124 @@
+{
+	"name": "NB_Create_Fact_Municipality",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "group2sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "8973fa5c-38c6-43eb-9013-9ca55f44e513"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/23b183d5-a30f-46b8-b418-ad060fb67787/resourceGroups/Group2SynapseETLProject/providers/Microsoft.Synapse/workspaces/group2-synapse-etl-workspace/bigDataPools/group2sparkpool",
+				"name": "group2sparkpool",
+				"type": "Spark",
+				"endpoint": "https://group2-synapse-etl-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/group2sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"# Väestö csv with kunta ids\n",
+					"df_ids = spark.read.csv(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/vaesto23.csv\", header=True, inferSchema=True)\n",
+					"\n",
+					"# Municipality data without kunta ids\n",
+					"df_combined = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/combined/combined_data.parquet/\")\n",
+					"\n",
+					"display(df_ids)"
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"for column in df_ids.columns:\n",
+					"    if column.lower() not in [\"kunta\", \"nimi\"]:\n",
+					"        df_ids = df_ids.drop(column)\n",
+					"\n",
+					"df_ids = df_ids.withColumnRenamed(\"kunta\", \"id\")\n",
+					"df_ids = df_ids.withColumnRenamed(\"nimi\", \"kunta\")\n",
+					"\n",
+					"display(df_ids)"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Join based on 'kunta'\n",
+					"df_combined_ids = df_combined.join(df_ids, on=[\"kunta\"], how=\"left\")\n",
+					"\n",
+					"df_combined_ids = df_combined_ids.withColumnRenamed(\"0-14 -vuotiaat\", \"0_14_vuotiaat\")\n",
+					"\n",
+					"# Reorder columns so that 'id' comes first\n",
+					"df_combined_ids = df_combined_ids.select(\"id\", *[col for col in df_combined_ids.columns if col != \"id\"])\n",
+					"\n",
+					"# Filter out rows where 'id' is null or undefined\n",
+					"df_combined_ids = df_combined_ids.filter(F.col(\"id\").isNotNull())\n",
+					"\n",
+					"# Delete column \"kunta\"\n",
+					"df_combined_ids = df_combined_ids.drop(\"kunta\")\n",
+					"\n",
+					"# Order by 'kunta' first, then 'id'\n",
+					"df_combined_ids = df_combined_ids.orderBy(F.col(\"id\"), F.col(\"vuosi\"))\n",
+					"\n",
+					"\n",
+					"display(df_combined_ids)"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import com.microsoft.spark.sqlanalytics\n",
+					"df_combined_ids.write.mode(\"overwrite\").synapsesql(\"group2sqlpool.library.fact_municipality\")"
+				],
+				"execution_count": 36
+			}
+		]
+	}
+}
