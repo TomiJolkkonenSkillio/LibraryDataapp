@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "bb4dd839-54dd-42e3-87ff-8fd7d88987d5"
+				"spark.autotune.trackingId": "d37d7f39-f975-4903-968d-1a2a1d50a880"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 16
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -88,7 +88,7 @@
 					"\n",
 					"display(df)"
 				],
-				"execution_count": 17
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"# Display the distinct values\n",
 					"print(distinct_vuosi_values)"
 				],
-				"execution_count": 18
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -118,10 +118,12 @@
 					"\n",
 					"\n",
 					"df = df.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Koski Tl\", \"Koski\"))\n",
+					"df = df.withColumn(\"kunta\", F.regexp_replace(F.col(\"kunta\"), \"Pedersören kunta\", \"Pedersören\"))\n",
 					"df.filter(F.col(\"kunta\") == \"Koski\").show()\n",
+					"df.filter(F.col(\"kunta\") == \"Pedersören\").show()\n",
 					""
 				],
-				"execution_count": 20
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +136,7 @@
 					"\n",
 					"print(\"Data successfully saved to ADLS in Parquet format.\")"
 				],
-				"execution_count": 21
+				"execution_count": 26
 			}
 		]
 	}
