@@ -41,6 +41,9 @@
 				},
 				{
 					"name": "joinlainauskokoelmat"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -209,13 +212,22 @@
 				"     ignoreNullPivots: false) ~> unpivotlainas",
 				"unpivotkokoelmat derive(kategoria = replace(kategoria, \"kokoelmat_\", \"\")) ~> renamingrowvaluestomatchcategories",
 				"unpivotlainas derive(kategoria = replace(kategoria, \"lainaus_\", \"\")) ~> renamingrowvaluestomatchcategories2",
-				"renamingrowvaluestomatchcategories, renamingrowvaluestomatchcategories2 join(renamingrowvaluestomatchcategories@kategoria == renamingrowvaluestomatchcategories2@kategoria",
-				"     && unpivotkokoelmat@kunta == unpivotlainas@kunta",
-				"     && unpivotkokoelmat@vuosi == unpivotlainas@vuosi,",
+				"renamingrowvaluestomatchcategories, renamingrowvaluestomatchcategories2 join(unpivotkokoelmat@kunta == unpivotlainas@kunta",
+				"     && unpivotkokoelmat@vuosi == unpivotlainas@vuosi",
+				"     && renamingrowvaluestomatchcategories@kategoria == renamingrowvaluestomatchcategories2@kategoria,",
 				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> joinlainauskokoelmat"
+				"     broadcast: 'auto')~> joinlainauskokoelmat",
+				"joinlainauskokoelmat select(mapColumn(",
+				"          kunta = unpivotlainas@kunta,",
+				"          vuosi = unpivotlainas@vuosi,",
+				"          kategoria = renamingrowvaluestomatchcategories2@kategoria,",
+				"          kokoelmat,",
+				"          lainaus",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
