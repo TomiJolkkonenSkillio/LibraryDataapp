@@ -3,6 +3,10 @@
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "group2sparkpool",
+			"type": "BigDataPoolReference"
+		},
 		"sessionProperties": {
 			"driverMemory": "28g",
 			"driverCores": 4,
@@ -13,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6c46314c-6ffe-4c0d-b9fb-6b41a9168554"
+				"spark.autotune.trackingId": "adc182e3-ebc8-4d72-8aed-4321c7089a5c"
 			}
 		},
 		"metadata": {
@@ -21,10 +25,25 @@
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
-				"display_name": "python"
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/23b183d5-a30f-46b8-b418-ad060fb67787/resourceGroups/Group2SynapseETLProject/providers/Microsoft.Synapse/workspaces/group2-synapse-etl-workspace/bigDataPools/group2sparkpool",
+				"name": "group2sparkpool",
+				"type": "Spark",
+				"endpoint": "https://group2-synapse-etl-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/group2sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -35,26 +54,51 @@
 					"from pyspark.sql import SparkSession\n",
 					"from pyspark.sql.functions import col, levenshtein\n",
 					"\n",
-					"# Initialize Spark session (ensure Azure credentials are configured)\n",
+					"# Initialize Spark session\n",
 					"spark = SparkSession.builder.getOrCreate()\n",
 					"\n",
-					"# Define the ADLS Gen2 paths\n",
-					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\"\n",
-					"population_data_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/\"\n",
+					"# Define paths\n",
+					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2015.csv\"\n",
+					"population_data_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/population_employment_15.csv\"\n",
 					"\n",
-					"# Read the data from ADLS Gen2\n",
-					"df1 = spark.read.format(\"delta\").load(library_data_path).select(\"kunta\")\n",
-					"df2 = spark.read.format(\"delta\").load(population_data_path).select(\"kunta\")\n",
+					"# Read data into Spark DataFrames\n",
+					"df_library = spark.read.csv(library_data_path, header=True, inferSchema=True)\n",
+					"df_population = spark.read.csv(population_data_path, header=True, inferSchema=True)\n",
+					"\n",
+					"# Print schema to identify the correct column name for municipalities\n",
+					"df_library.printSchema()\n",
+					"df_population.printSchema()\n",
+					"\n",
+					"# Assuming the common column for municipalities is 'kunta'\n",
+					"#df_library = df_library.select(col(\"kunta\"))\n",
+					"#df_population = df_population.select(col(\"kunta\"))\n",
 					"\n",
 					"# Perform cross join and apply Levenshtein distance filter\n",
-					"threshold = 2  # Define similarity threshold\n",
-					"joined_df = df1.crossJoin(df2) \\\n",
-					"    .withColumn(\"levenshtein_distance\", levenshtein(col(\"df1.kunta\"), col(\"df2.kunta\"))) \\\n",
-					"    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
-					"    .select(col(\"df1.kunta\").alias(\"kunta_library\"), col(\"df2.kunta\").alias(\"kunta_population\"), \"levenshtein_distance\")\n",
+					"# small threshold (0 or 1) means only exact or almost exact matches are allowed\n",
+					"# moderate threshold 2-3, slight spelling differences or typos\n",
+					"# large threshold 5+ permits significant variations in spelling\n",
+					"# threshold = 0, only exact matches will be included\n",
+					"# 1 or 2 is generally good for catching typos while avoiding incorrect matches\n",
+					"# if names are long and complex -> threshold 3, if data has OCR errors or inconsistent transliterations, use higher\n",
+					"# OCR error: \"O\" letter vs \"0\" zero, \"l\" lower case L vs \"1\" one, \"rn\" letters l and r misread as \"m\", \n",
+					"# Helsinki vs HeIsinki, Espoo vs Espo, Tampere vs. Tam pere, Jyväskylä vs. Jyvaskyla (no scandinavian letters)\n",
+					"\n",
+					"#threshold = 2  # Adjust as needed\n",
+					"\n",
+					"#joined_df = df_library.crossJoin(df_population) \\\n",
+					"#    .withColumn(\"levenshtein_distance\", levenshtein(col(\"df_library.kunta\"), col(\"df_population.kunta\"))) \\\n",
+					"#    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
+					"#    .select(col(\"df_library.kunta\").alias(\"library_kunta\"), col(\"df_population.kunta\").alias(\"population_kunta\"), \"levenshtein_distance\")\n",
 					"\n",
 					"# Show results\n",
-					"joined_df.show()\n",
+					"#joined_df.show()\n",
+					""
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
 					""
 				],
 				"execution_count": null
