@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9ff9f084-f777-488c-a475-c5be16045ea1"
+				"spark.autotune.trackingId": "385361b4-3c8c-443b-96c1-0732b8c72bbf"
 			}
 		},
 		"metadata": {
@@ -88,11 +88,17 @@
 				"execution_count": 12
 			},
 			{
-				"cell_type": "code",
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
 				"source": [
 					"Actual data with levenshtein"
-				],
-				"execution_count": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -104,24 +110,33 @@
 					"spark = SparkSession.builder.getOrCreate()\n",
 					"\n",
 					"# Define paths\n",
-					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/notebook_files/library_data.parquet/\"\n",
+					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/librarydata/\"\n",
 					"population_data_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/combined/combined_data.parquet/\"\n",
 					"\n",
 					"# Read data into Spark DataFrames\n",
 					"df_library = spark.read.parquet(library_data_path)\n",
 					"df_population = spark.read.parquet(population_data_path)\n",
 					"\n",
-					"# Print schema to identify the correct column name for municipalities\n",
-					"#df_library.printSchema()\n",
+					"# Print schema to verify column names\n",
+					"df_library.printSchema()\n",
 					"#df_population.printSchema()\n",
 					"\n",
-					"# Rename column in df_library to match 'kunta'\n",
-					"df_library = df_library.withColumnRenamed(\"Kokoelmat0\", \"kunta\")\n",
+					"# Ensure the column exists before renaming\n",
+					"#if \"Kokoelma0\" in df_library.columns:\n",
+					"#    df_library = df_library.withColumnRenamed(\"Kokoelma0\", \"kunta\")\n",
 					"\n",
-					"# Perform INNER JOIN on 'kunta'\n",
-					"joined_df = df_library.join(df_population, on=\"kunta\", how=\"inner\")\n",
+					"# Ensure 'kunta' column exists before proceeding\n",
+					"#if \"kunta\" not in df_library.columns or \"kunta\" not in df_population.columns:\n",
+					"#    raise ValueError(\"Column 'kunta' is missing in one of the dataframes after renaming.\")\n",
 					"\n",
-					"# Perform cross join and apply Levenshtein distance filter\n",
+					"# Exact Match Join\n",
+					"#exact_match_df = df_library.join(df_population, on=\"kunta\", how=\"inner\")\n",
+					"\n",
+					"# Find unmatched municipalities for fuzzy matching\n",
+					"#df_library_unmatched = df_library.join(df_population, on=\"kunta\", how=\"left_anti\")\n",
+					"#df_population_unmatched = df_population.join(df_library, on=\"kunta\", how=\"left_anti\")\n",
+					"\n",
+					"# apply Levenshtein distance filter\n",
 					"# small threshold (0 or 1) means only exact or almost exact matches are allowed\n",
 					"# moderate threshold 2-3, slight spelling differences or typos\n",
 					"# large threshold 5+ permits significant variations in spelling\n",
@@ -131,23 +146,22 @@
 					"# OCR error: \"O\" letter vs \"0\" zero, \"l\" lower case L vs \"1\" one, \"rn\" letters l and r misread as \"m\", \n",
 					"# Helsinki vs HeIsinki, Espoo vs Espo, Tampere vs. Tam pere, Jyväskylä vs. Jyvaskyla (no scandinavian letters)\n",
 					"\n",
-					"threshold = 2  # Adjust as needed\n",
+					"#threshold = 2\n",
 					"\n",
-					"# Perform CROSS JOIN and apply Levenshtein distance filter\n",
-					"fuzzylogic_df = df_library.crossJoin(df_population) \\\n",
-					"    .withColumn(\"levenshtein_distance\", levenshtein(df_library[\"kunta\"], df_population[\"kunta\"])) \\\n",
-					"    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
-					"    .select(\n",
-					"        df_library[\"kunta\"],\n",
-					"        df_population[\"kunta\"],\n",
-					"        col(\"levenshtein_distance\")\n",
-					"    )\n",
+					"# Fuzzy Matching on unmatched data\n",
+					"#fuzzylogic_df = df_library_unmatched.crossJoin(df_population_unmatched) \\\n",
+					"#    .withColumn(\"levenshtein_distance\", levenshtein(col(\"df_library_unmatched.kunta\"), col(\"df_population_unmatched.kunta\"))) \\\n",
+					"#    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
+					"#    .select(df_library_unmatched[\"kunta\"].alias(\"kunta\"), col(\"levenshtein_distance\"))\n",
+					"\n",
+					"# combine exact matches and fuzzy matches\n",
+					"#final_df = exact_match_df.unionByName(fuzzylogic_df, allowMissingColumns=True)\n",
 					"\n",
 					"# Show results\n",
-					"fuzzylogic_df.show()\n",
+					"#final_df.show()\n",
 					""
 				],
-				"execution_count": 25
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
