@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "adc182e3-ebc8-4d72-8aed-4321c7089a5c"
+				"spark.autotune.trackingId": "9ff9f084-f777-488c-a475-c5be16045ea1"
 			}
 		},
 		"metadata": {
@@ -49,6 +49,52 @@
 		},
 		"cells": [
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Test 1st with own data"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import SparkSession\n",
+					"from pyspark.sql.functions import col\n",
+					"\n",
+					"# Initialize Spark session\n",
+					"spark = SparkSession.builder.getOrCreate()\n",
+					"\n",
+					"# Sample test data\n",
+					"data_library = [(\"Helsinki\", \"Lib Data 1\"), (\"Espoo\", \"Lib Data 2\"), (\"Tampere\", \"Lib Data 3\")]\n",
+					"data_population = [(\"Helsinki\", \"Pop Data A\"), (\"Espoo\", \"Pop Data B\"), (\"Jyväskylä\", \"Pop Data C\")]\n",
+					"\n",
+					"# Create DataFrames with 'kunta' as common column\n",
+					"df_library = spark.createDataFrame(data_library, [\"kunta\", \"library_info\"])\n",
+					"df_population = spark.createDataFrame(data_population, [\"kunta\", \"population_info\"])\n",
+					"\n",
+					"# INNER JOIN on 'kunta'\n",
+					"joined_df = df_library.join(df_population, on=\"kunta\", how=\"inner\")\n",
+					"\n",
+					"# Show results\n",
+					"joined_df.show()\n",
+					""
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"Actual data with levenshtein"
+				],
+				"execution_count": null
+			},
+			{
 				"cell_type": "code",
 				"source": [
 					"from pyspark.sql import SparkSession\n",
@@ -58,20 +104,22 @@
 					"spark = SparkSession.builder.getOrCreate()\n",
 					"\n",
 					"# Define paths\n",
-					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/raw/library2015.csv\"\n",
-					"population_data_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/raw/population_employment_15.csv\"\n",
+					"library_data_path = \"abfss://library@group2projectstorage.dfs.core.windows.net/silver/notebook_files/library_data.parquet/\"\n",
+					"population_data_path = \"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/combined/combined_data.parquet/\"\n",
 					"\n",
 					"# Read data into Spark DataFrames\n",
-					"df_library = spark.read.csv(library_data_path, header=True, inferSchema=True)\n",
-					"df_population = spark.read.csv(population_data_path, header=True, inferSchema=True)\n",
+					"df_library = spark.read.parquet(library_data_path)\n",
+					"df_population = spark.read.parquet(population_data_path)\n",
 					"\n",
 					"# Print schema to identify the correct column name for municipalities\n",
-					"df_library.printSchema()\n",
-					"df_population.printSchema()\n",
+					"#df_library.printSchema()\n",
+					"#df_population.printSchema()\n",
 					"\n",
-					"# Assuming the common column for municipalities is 'kunta'\n",
-					"#df_library = df_library.select(col(\"kunta\"))\n",
-					"#df_population = df_population.select(col(\"kunta\"))\n",
+					"# Rename column in df_library to match 'kunta'\n",
+					"df_library = df_library.withColumnRenamed(\"Kokoelmat0\", \"kunta\")\n",
+					"\n",
+					"# Perform INNER JOIN on 'kunta'\n",
+					"joined_df = df_library.join(df_population, on=\"kunta\", how=\"inner\")\n",
 					"\n",
 					"# Perform cross join and apply Levenshtein distance filter\n",
 					"# small threshold (0 or 1) means only exact or almost exact matches are allowed\n",
@@ -83,18 +131,23 @@
 					"# OCR error: \"O\" letter vs \"0\" zero, \"l\" lower case L vs \"1\" one, \"rn\" letters l and r misread as \"m\", \n",
 					"# Helsinki vs HeIsinki, Espoo vs Espo, Tampere vs. Tam pere, Jyväskylä vs. Jyvaskyla (no scandinavian letters)\n",
 					"\n",
-					"#threshold = 2  # Adjust as needed\n",
+					"threshold = 2  # Adjust as needed\n",
 					"\n",
-					"#joined_df = df_library.crossJoin(df_population) \\\n",
-					"#    .withColumn(\"levenshtein_distance\", levenshtein(col(\"df_library.kunta\"), col(\"df_population.kunta\"))) \\\n",
-					"#    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
-					"#    .select(col(\"df_library.kunta\").alias(\"library_kunta\"), col(\"df_population.kunta\").alias(\"population_kunta\"), \"levenshtein_distance\")\n",
+					"# Perform CROSS JOIN and apply Levenshtein distance filter\n",
+					"fuzzylogic_df = df_library.crossJoin(df_population) \\\n",
+					"    .withColumn(\"levenshtein_distance\", levenshtein(df_library[\"kunta\"], df_population[\"kunta\"])) \\\n",
+					"    .filter(col(\"levenshtein_distance\") <= threshold) \\\n",
+					"    .select(\n",
+					"        df_library[\"kunta\"],\n",
+					"        df_population[\"kunta\"],\n",
+					"        col(\"levenshtein_distance\")\n",
+					"    )\n",
 					"\n",
 					"# Show results\n",
-					"#joined_df.show()\n",
+					"fuzzylogic_df.show()\n",
 					""
 				],
-				"execution_count": 8
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
