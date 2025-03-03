@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "25c71572-ed6b-40f1-a763-12c64ebc9f16"
+				"spark.autotune.trackingId": "ec9a9bb5-db06-49a5-a74e-f7e7466d2ac7"
 			}
 		},
 		"metadata": {
@@ -56,7 +56,7 @@
 					"df_lang = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet/\")\n",
 					"df_population = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/population_data.parquet\")"
 				],
-				"execution_count": 13
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -73,7 +73,7 @@
 					"    .select(F.col(\"a.kunta\"), F.col(\"b.kunta\")) \\\n",
 					"    .show()"
 				],
-				"execution_count": 14
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +93,7 @@
 					"    .show(400)\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"\n",
 					""
 				],
-				"execution_count": 17
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +123,7 @@
 					"null_counts.show()\n",
 					""
 				],
-				"execution_count": 18
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -146,7 +146,7 @@
 					"# Show the results\n",
 					"null_counts_transposed.show()"
 				],
-				"execution_count": 19
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
