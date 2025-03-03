@@ -19,6 +19,12 @@
 				},
 				{
 					"name": "split1"
+				},
+				{
+					"name": "comparingcolumnvalues"
+				},
+				{
+					"name": "split2"
 				}
 			],
 			"scriptLines": [
@@ -79,7 +85,10 @@
 				"     ignoreNoFilesFound: false) ~> data2014",
 				"data2014 assert(expectTrue(isInteger({Kokoelmat: Muut aineistot}), false, 'assert1')) ~> assert1",
 				"assert1 split(hasError('assert1'),",
-				"     disjoint: false) ~> split1@(fail, success)"
+				"     disjoint: false) ~> split1@(fail, success)",
+				"split1@success derive(compare = {Kokoelmat: Kirjat yhteensä} - ({Kokoelmat: Suomenkieliset kirjat}+{Kokoelmat: Ruotsinkieliset kirjat}+{Kokoelmat: Muunkieliset kirjat})) ~> comparingcolumnvalues",
+				"comparingcolumnvalues split(compare == 0,",
+				"     disjoint: false) ~> split2@(zero, othervalues)"
 			]
 		}
 	}
