@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c3d5f698-357d-4d3d-965e-2ccd1a0e3bff"
+				"spark.autotune.trackingId": "f38d1be6-3867-48bc-a181-3389fd662134"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 					"# Display the final combined DataFrame\n",
 					"display(df_combined)"
 				],
-				"execution_count": 15
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -114,7 +114,124 @@
 					"for col in df.columns:\n",
 					"    print(col)"
 				],
-				"execution_count": 16
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Compute the expected sum for \"Kokoelmat: Kirjat yhteensä\"\n",
+					"df = df.withColumn(\n",
+					"    \"Kirjat_Yhteensa_Check\",\n",
+					"    F.col(\"Kokoelmat: Suomenkieliset kirjat\") + \n",
+					"    F.col(\"Kokoelmat: Ruotsinkieliset kirjat\") + \n",
+					"    F.col(\"Kokoelmat: Muunkieliset kirjat\")\n",
+					")\n",
+					"\n",
+					"# Compute mismatch flag for \"Kokoelmat: Kirjat yhteensä\"\n",
+					"df = df.withColumn(\n",
+					"    \"Mismatch_Kirjat_Yhteensa\",\n",
+					"    F.when(F.col(\"Kirjat_Yhteensa_Check\") != F.col(\"Kokoelmat: Kirjat yhteensä\"), True).otherwise(False)\n",
+					")\n",
+					"\n",
+					"# Compute the expected sum for \"Kokoelmat1\"\n",
+					"df = df.withColumn(\n",
+					"    \"Kokoelmat1_Check\",\n",
+					"    F.col(\"Kokoelmat: Kirjat yhteensä\") + \n",
+					"    F.col(\"Kokoelmat: Nuotit ja partituurit\") + \n",
+					"    F.col(\"Kokoelmat: Musiikkiäänitteet\") + \n",
+					"    F.col(\"Kokoelmat: Muut äänitteet\") + \n",
+					"    F.col(\"Kokoelmat: Videotallenteet (2018-)\") + \n",
+					"    F.col(\"Kokoelmat: Muut aineistot\")\n",
+					")\n",
+					"\n",
+					"# Compute mismatch flag for \"Kokoelmat1\"\n",
+					"df = df.withColumn(\n",
+					"    \"Mismatch_Kokoelmat1\",\n",
+					"    F.when(F.col(\"Kokoelmat1_Check\") != F.col(\"Kokoelmat1\"), True).otherwise(False)\n",
+					")\n",
+					"\n",
+					"# Count mismatches\n",
+					"num_mismatches_kirjat = df.filter(F.col(\"Mismatch_Kirjat_Yhteensa\") == True).count()\n",
+					"num_mismatches_kokoelmat1 = df.filter(F.col(\"Mismatch_Kokoelmat1\") == True).count()\n",
+					"\n",
+					"print(f\"Number of mismatches in 'Kokoelmat: Kirjat yhteensä': {num_mismatches_kirjat}\")\n",
+					"print(f\"Number of mismatches in 'Kokoelmat1': {num_mismatches_kokoelmat1}\")\n",
+					"\n",
+					"display(df)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql import functions as F\n",
+					"\n",
+					"# Count total rows\n",
+					"total_rows = df.count()\n",
+					"\n",
+					"# Count mismatches for each mismatch column\n",
+					"num_mismatches_kirjat = df.filter(F.col(\"Mismatch_Kirjat_Yhteensa\") == True).count()\n",
+					"num_mismatches_kokoelmat1 = df.filter(F.col(\"Mismatch_Kokoelmat1\") == True).count()\n",
+					"\n",
+					"# Calculate mismatch percentages\n",
+					"mismatch_ratio_kirjat = num_mismatches_kirjat / total_rows\n",
+					"mismatch_ratio_kokoelmat1 = num_mismatches_kokoelmat1 / total_rows\n",
+					"\n",
+					"# Threshold for 90% correct (i.e., max 10% mismatch allowed)\n",
+					"threshold = 0.10\n",
+					"\n",
+					"# Check if either column exceeds the threshold\n",
+					"if mismatch_ratio_kirjat > threshold or mismatch_ratio_kokoelmat1 > threshold:\n",
+					"    # If mismatches exceed 10%, move them to df_mismatches\n",
+					"    df_mismatches = df.filter(F.col(\"Mismatch_Kirjat_Yhteensa\") | F.col(\"Mismatch_Kokoelmat1\"))\n",
+					"    df = df.filter(~(F.col(\"Mismatch_Kirjat_Yhteensa\") | F.col(\"Mismatch_Kokoelmat1\")))\n",
+					"\n",
+					"    print(f\"Number of mismatches moved to df_mismatches: {df_mismatches.count()}\")\n",
+					"    print(f\"Number of matching rows remaining in df: {df.count()}\")\n",
+					"\n",
+					"    df_mismatches.show()\n",
+					"    raise Exception(\"Inccorrect data\")\n",
+					"else:\n",
+					"    # If 90% or more of the rows are correct, keep everything in df\n",
+					"    print(\"Mismatch ratio is below threshold. Keeping all data in df.\")\n",
+					""
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import col, expr\n",
+					"\n",
+					"# Add a new column to check if the sum matches 'Kirjat yhteensä'\n",
+					"df_checked = df.withColumn(\n",
+					"    \"Kirjat_Yhteensa_Check\",\n",
+					"    (col(\"Kokoelmat: Suomenkieliset kirjat\") + \n",
+					"     col(\"Kokoelmat: Ruotsinkieliset kirjat\") + \n",
+					"     col(\"Kokoelmat: Muunkieliset kirjat\")) == col(\"Kokoelmat: Kirjat yhteensä\")\n",
+					")\n",
+					"\n",
+					"# Count mismatches\n",
+					"mismatch_count = df_checked.filter(col(\"Kirjat_Yhteensa_Check\") == False).count()\n",
+					"\n",
+					"# Show results where there are mismatches\n",
+					"df_checked.filter(col(\"Kirjat_Yhteensa_Check\") == False).show()\n",
+					"print(f\"Number of mismatches: {mismatch_count}\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
