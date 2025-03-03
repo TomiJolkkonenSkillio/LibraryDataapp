@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "NB_data_validation_practise_for_combined_economy_lang_population",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "571bad04-2c99-43e6-b65a-e066a6d93e0d"
+				"spark.autotune.trackingId": "25c71572-ed6b-40f1-a763-12c64ebc9f16"
 			}
 		},
 		"metadata": {
@@ -56,7 +56,7 @@
 					"df_lang = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/finswe/finswe_data.parquet/\")\n",
 					"df_population = spark.read.parquet(\"abfss://vaesto@group2projectstorage.dfs.core.windows.net/silver/population/population_data.parquet\")"
 				],
-				"execution_count": 1
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -73,7 +73,7 @@
 					"    .select(F.col(\"a.kunta\"), F.col(\"b.kunta\")) \\\n",
 					"    .show()"
 				],
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -93,10 +93,13 @@
 					"    .show(400)\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
 					"df_combined = df_economy.join(df_lang, on=[\"kunta\", \"vuosi\"], how=\"left\")\n",
 					"df_all_combined=df_combined.join(df_population, on=[\"kunta\", \"vuosi\"], how=\"left\")\n",
@@ -104,10 +107,53 @@
 					"#for column in df_all_combined.columns:\n",
 					"    #print(column)\n",
 					"\n",
-					"df_all_combined.isNull().sum()\n",
 					""
 				],
-				"execution_count": 12
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import col, sum\n",
+					"\n",
+					"# Count the number of null values for each column\n",
+					"null_counts = df_all_combined.select([sum(col(c).isNull().cast(\"int\")).alias(c) for c in df_all_combined.columns])\n",
+					"\n",
+					"# Show the result\n",
+					"null_counts.show()\n",
+					""
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import col, lit\n",
+					"\n",
+					"# Count the number of null values for each column\n",
+					"null_counts = df_all_combined.select(\n",
+					"    [sum(col(c).isNull().cast(\"int\")).alias(c) for c in df_all_combined.columns]\n",
+					")\n",
+					"\n",
+					"# Transpose the results to have one row with column names and their corresponding null counts\n",
+					"null_counts_transposed = null_counts.selectExpr(\n",
+					"    \"stack({0}, {1}) as (column_name, null_count)\".format(\n",
+					"        len(df_all_combined.columns),\n",
+					"        \",\".join([f\"'{c}', {c}\" for c in df_all_combined.columns])\n",
+					"    )\n",
+					")\n",
+					"\n",
+					"# Show the results\n",
+					"null_counts_transposed.show()"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}
