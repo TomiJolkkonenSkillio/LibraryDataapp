@@ -25,6 +25,9 @@
 				},
 				{
 					"name": "split2"
+				},
+				{
+					"name": "comparingcolumnvalues2"
 				}
 			],
 			"scriptLines": [
@@ -88,7 +91,8 @@
 				"     disjoint: false) ~> split1@(fail, success)",
 				"split1@success derive(compare = {Kokoelmat: Kirjat yhteensä} - ({Kokoelmat: Suomenkieliset kirjat}+{Kokoelmat: Ruotsinkieliset kirjat}+{Kokoelmat: Muunkieliset kirjat})) ~> comparingcolumnvalues",
 				"comparingcolumnvalues split(compare == 0,",
-				"     disjoint: false) ~> split2@(zero, othervalues)"
+				"     disjoint: false) ~> split2@(zero, othervalues)",
+				"split2@zero derive(compare2 = Kokoelmat1 - ({Kokoelmat: Kaunokirjat, aikuiset}+{Kokoelmat: Kaunokirjat, lapset}+{Kokoelmat: Tietokirjat, aikuiset}+{Kokoelmat: Tietokirjat, lapset}+{Kokoelmat: Nuotit ja partituurit}+{Kokoelmat: Musiikkiäänitteet}+{Kokoelmat: Muut äänitteet}+{Kokoelmat: Videotallenteet (2018-)}+{Kokoelmat: Muut aineistot}+{Kokoelmat: Videot (-2017)}+{Kokoelmat: CD-Rom-levyt (-2017)}+{Kokoelmat: DVD ja Blue-ray -levyt (-2017)})) ~> comparingcolumnvalues2"
 			]
 		}
 	}
