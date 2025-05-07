@@ -2,7 +2,7 @@
 
 Analysis on finnish public library loan data from 2014 to 2023, combined with population structure data on finnish municipalities.Column names and the report is in finnish as the audience was finnish speaking in this case.
 
-Project included design and implementation of ETL process in Azure Synapse Analytics and analysis and visualization on the data. Deliverables included a Power BI report and the documentation of the work as a presentation. The objective was to find interesting findings and correlations between different population groups and loan categories.
+Project included design and implementation of ETL process in Azure Synapse Analytics, with analysis and visualization on the data. Deliverables included a Power BI report and the documentation of the work as a presentation. The objective was to find interesting findings and correlations between different population groups and loan categories.
 
 Tech used:
 - Azure
